@@ -1,0 +1,9 @@
+name: "surv-theory-course"
+output_dir: docs
+navbar:
+  title: "Theory of survival analysis using counting processes"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Notes and resources"
+      href: resources.html

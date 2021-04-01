@@ -1,0 +1,61 @@
+---
+title: "Theory of survival analysis using counting processes"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(ggplot2)
+```
+
+## Purpose of the course
+
+The analysis of survival data is critical in medical research, whether one is studying the lifetimes of cells, tumors, or humans. This course aims to develop an intuitive understanding of the theory of survival analysis methods using counting processes and martingales. This will provide participants with a deeper understanding of survival data analysis methods in medical research, enabling them to better interpret and analyze them. 
+
+## Intended learning outcomes
+
+After successfully completing this course, students will be able to:
+
+- Summarize basic asymptotic theory for processes and sketch derivations of basic results involving the empirical cumulative distribution function.
+- Identify notation and terminology for counting processes and connect them to survival statistics. 
+- Reframe nonparametric estimators of survival quantities in terms of counting processes.
+- Paraphrase the martingale central limit theorem and describe how it can be used to perform inference for the Kaplan-Meier estimator.
+- Interpret the proportional hazards, additive hazards, and parametric regression models from the counting process perspective. 
+- Compare and contrast theoretical and methodological advances in survival analysis, including frailty models, multi-state models, joint models, causal inference and prediction for survival analysis.
+
+## Contents of the course
+
+The course will cover the following topics in order:
+
+1. Overview and some basics about the empirical process and modern empirical process theory;
+2. Motivation of counting processes including notation and terminology. Representation of Nelson-Aalen, Kaplan-Meier, and Aalen-Johansen Estimators in terms of counting processes. Types of censoring and assumptions about censoring.
+3. Basic terminology and notation about martingales. Limit theorems involving martingales and how to apply them.
+4. Statistical inference, asymptotic normality and efficiency of Nelson-Aalen and Kaplan-Meier estimators. Logrank tests and its variants, asymptotic theory, confidence bands.
+5. Proportional hazards and additive hazards models from the counting process perspective.
+6. Parametric survival models, including accelerated failure time and flexible parametric models.
+7. Frailty models, noncollapsibility, and causal inference.
+
+
+## Literature
+
+The required course textbook is 
+
+Odd O. Aalen, Ørnulf Borgan and Håkon K. Gjessing. Survival and Event History Analysis: A process point of view. Springer-Verlag, 2008. [ABG]
+
+other required papers will be provided by the teacher. 
+
+Recommended textbooks for further reading are 
+
+Thomas R. Fleming, David P. Harrington. Counting Processes and Survival Analysis. Wiley-New York, 1991.
+
+Per K. Andersen, Ørnulf Borgan, Richard D. Gill, Niels Keiding. Statistical Models Based on Counting Processes. Springer-Verlag, 1993. 
+
+
+
+## Location
+
+#### Zoom -- check your email
+
+
+## Contact Information: 
+
+- Michael Sachs (e-mail: michael.sachs@ki.se), Department of Medical Epidemiology and Biostatistics (MEB), Karolinska Institutet
