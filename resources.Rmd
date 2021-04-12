@@ -25,3 +25,11 @@ Shorack, G. R., & Wellner, J. A. (2009). Empirical processes with applications t
 - Chapters 1 and 3 in ABG.
 - Chapter 0 in Fleming and Harrington.
 
+## Lecture 3 -- Martingales -- definitions, properties, and applications
+
+- [Slides (html)](notes/03-martingale-intro.html)
+
+### Further reading
+
+- Chapter 2 in ABG.
+- Chapter 1 in Fleming and Harrington.
