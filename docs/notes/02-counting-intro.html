@@ -607,7 +607,7 @@ Michael Sachs
 <p>It is often of interest to look at expectations of the future of a process conditional on the past. In discrete time, we can write <span class="math display">\[
 E(X(t + 1) | X(0) = x_0, \ldots, X(t) = x_t).
 \]</span> In continuous time, it may be tempting to write something similar. However, the sample paths are not exactly “events” that we can condition on, and hence we introduce the notion of a <em>history</em> of a process.</p>
-<p>For a process <span class="math inline">\(X(t)\)</span>, let <span class="math inline">\(\mathcal{F}_t\)</span> denote the smallest <span class="math inline">\(\sigma\)</span>-algebra that makes all of the random variables <span class="math inline">\(X(s), 0 \leq s \leq t\)</span> measurable. The sequence of <span class="math inline">\(\sigma\)</span>-algebras <span class="math inline">\(\{\mathcal{F}_t: t \geq 0\}\)</span> such that <span class="math inline">\(\mathcal{F}_s \subset \mathcal{F}_t\)</span> for <span class="math inline">\(s \leq t\)</span> is the <em>history</em> of a process <span class="math inline">\(X(t)\)</span> up to <span class="math inline">\(t\)</span></p>
+<p>For a process <span class="math inline">\(X(t)\)</span>, let <span class="math inline">\(\mathcal{F}_t\)</span> denote the smallest <span class="math inline">\(\sigma\)</span>-algebra that makes all of the <span class="math inline">\(X(s), 0 \leq s \leq t\)</span> measurable (i.e., random variables). The sequence of <span class="math inline">\(\sigma\)</span>-algebras <span class="math inline">\(\{\mathcal{F}_t: t \geq 0\}\)</span> such that <span class="math inline">\(\mathcal{F}_s \subset \mathcal{F}_t\)</span> for <span class="math inline">\(s \leq t\)</span> is the <em>history</em> of a process <span class="math inline">\(X(t)\)</span> up to <span class="math inline">\(t\)</span></p>
 <p>The <span class="math inline">\(\sigma\)</span>-algebra is the formalization of the set of all possible events in that can be described by the process <span class="math inline">\(X(t)\)</span>. We may also allow this history to include auxiliary information, like covariates.</p>
 <p><strong>Recall</strong>: a <span class="math inline">\(\sigma\)</span>-algebra is a set that is closed under complement and countable unions.</p>
 </div><div id="more-on-histories-and-conditioning" class="slide section level2">
@@ -627,6 +627,7 @@ E(X(t + 1) | X(0) = x_0, \ldots, X(t) = x_t).
 \]</span> and represents the rate of events at time <span class="math inline">\(t\)</span> given the past. Given the definition of the hazard, we can write <span class="math inline">\(\lambda(t) = \alpha(t) (1 - N(t-))\)</span> or <span class="math inline">\(= \alpha(t) I\{T \geq t\}\)</span> if <span class="math inline">\(T\)</span> is the event time.</p>
 <p>Define <span class="math inline">\(Y(t) = (1 - N(t-))\)</span> to be the <em>at-risk</em> process, the indicator that a failure has not yet occurred by time <span class="math inline">\(t\)</span>.</p>
 <p>The cumulative intensity process is <span class="math inline">\(\Lambda(t) = \int_0^t\lambda(s) \, ds\)</span>.</p>
+<p><em>Note</em>: Fleming and Harrington use <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(\Lambda\)</span> to denote the hazard/cumulative hazard. We are following the notation of ABG.</p>
 </div><div id="aggregated-counting-process" class="slide section level2">
 <h1>Aggregated counting process</h1>
 <p>Suppose <span class="math inline">\(T_1, \ldots, T_n\)</span> are independent non-negative random variables representing failure times (no censoring).</p>
@@ -675,13 +676,13 @@ P(dN_i(t) = 1 | \mathcal{F}_{t-}) = \lambda_i(t) dt
 <p>Recall the cumulative hazard defined as <span class="math inline">\(A(t) = \int_0^t\alpha(s) ds\)</span>. The Nelson-Aalen estimator is <span class="math display">\[
 \hat{A}(t) = \sum_{T_j \leq t} \frac{D_j}{Y(T_j)}. 
 \]</span> This was motivated by using the life-table approach (counting events in time intervals) and then taking the limit so that only one event can occur in each interval. We can write this as <span class="math display">\[
-\hat{A}(t) = \int_0^t \frac{I{Y(u) &gt; 0}}{Y(u)}\, dN(u), 
+\hat{A}(t) = \int_0^t \frac{I\{Y(u) &gt; 0\}}{Y(u)}\, dN(u), 
 \]</span> which is an estimate of the quantity <span class="math display">\[
-A^*(t) = \int_0^t I{Y(u) &gt; 0} \alpha(u) \du, 
+A^*(t) = \int_0^t I\{Y(u) &gt; 0\} \alpha(u) \, du, 
 \]</span> and hence <span class="math display">\[
-\hat{A}(t) - A^*(t) = \int_0^t \frac{I{Y(u) &gt; 0}}{Y(u)}\, \{dN(u) - Y(u)\alpha(u) du\} = 
+\hat{A}(t) - A^*(t) = \int_0^t \frac{I\{Y(u) &gt; 0\}}{Y(u)}\, \{dN(u) - Y(u)\alpha(u) du\} = 
 \]</span> <span class="math display">\[
-\sum_i \int_0^t \frac{I{Y(u) &gt; 0}}{Y(u)}\, dM_i(u), 
+\sum_i \int_0^t \frac{I\{Y(u) &gt; 0\}}{Y(u)}\, dM_i(u), 
 \]</span> where <span class="math inline">\(M_i(u) = N_i(u) - \int_0^uY_i(s) \, dA(s)\)</span>. This is a mean-zero martingale, and its asymptotic properties can inform us about the behavior of the NA estimator.</p>
 </div><div id="kaplan-meier" class="slide section level2">
 <h1>Kaplan-Meier</h1>

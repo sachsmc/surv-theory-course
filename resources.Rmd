@@ -20,6 +20,10 @@ Shorack, G. R., & Wellner, J. A. (2009). Empirical processes with applications t
 
 - [Slides (html)](notes/02-counting-intro.html)
 
+### Assignment
+
+Read [Efron (1967)](Efron1967.pdf) and code up a version of the redistribution of mass algorithm in your favorite language. What is the "self-consistency" property and how is it used in Theorem 8.1? 
+
 ### Further reading
 
 - Chapters 1 and 3 in ABG.
