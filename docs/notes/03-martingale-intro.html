@@ -398,7 +398,7 @@ Michael Sachs
 <div id="martingales-in-discrete-time" class="slide section level2">
 <h1>Martingales in discrete time</h1>
 <p>A process <span class="math inline">\(M = \{M_0, M_1, \ldots, M_n\}\)</span> is a <em>martingale</em> if <span class="math display">\[
-E(M_n | \mathcal{F}_{n-1}) = E(M_n | M_1, \ldots, M_{n-1}) = M_{n-1}, \mbox{for} n = 1, 2, \ldots,
+E(M_n | \mathcal{F}_{n-1}) = E(M_n | M_1, \ldots, M_{n-1}) = M_{n-1}, \mbox{ for } n = 1, 2, \ldots,
 \]</span> where <span class="math inline">\(\mathcal{F}_{n-1}\)</span> is the history up to <span class="math inline">\(n-1\)</span>.</p>
 <p>Example: Suppose <span class="math inline">\(X_1, X_2, \ldots\)</span> be independent with <span class="math inline">\(P(X_i = 1) = P(X_i = -1) = 0.5\)</span>. <span class="math inline">\(M_n = X_1 + X_2 + \cdots X_n\)</span>, the winnings after <span class="math inline">\(n\)</span> games, is a mean 0 martingale.</p>
 </div>
@@ -436,13 +436,17 @@ Z_n = (H \bullet X)_n = \sum_{s = 1}^nH_s \Delta X_s.
 </ul>
 <p>How would you prove this? Interpret this result in the context of our coin-flipping example.</p>
 </div>
+<div id="derivation-of-transformation-result" class="slide section level2">
+<h1>Derivation of transformation result</h1>
+<p>Hint: prove it directly by considering <span class="math inline">\(E(Z_n - Z_{n-1} | \mathcal{F}_{n-1})\)</span></p>
+</div>
 <div id="another-look-at-censoring" class="slide section level2">
 <h1>Another look at censoring</h1>
 <p>Let <span class="math inline">\(M_0, M_1, \ldots, M_n\)</span> be a process with history <span class="math inline">\(\mathcal{F}_n\)</span> and <span class="math inline">\(T\)</span> be a positive integer valued random variable.</p>
 <p><span class="math inline">\(T\)</span> is a <em>stopping time</em> if for all <span class="math inline">\(n\)</span> the event <span class="math inline">\(\{T = n\} \in \mathcal{F}_n\)</span>. The <em>stopped process</em> is <span class="math display">\[
 M^T = M_{n \wedge T} = M_n \mbox{ if } n \leq T \mbox{ and } M_T \mbox{ if } n &gt; T. 
 \]</span></p>
-<p>Exercise: Show that if <span class="math inline">\(M\)</span> is a martingale then so is <span class="math inline">\(M^T\)</span>. Hint, find a predictible process <span class="math inline">\(H\)</span> such that <span class="math inline">\(M^T = H \bullet M\)</span>.</p>
+<p>Exercise: Show that if <span class="math inline">\(M\)</span> is a martingale then so is <span class="math inline">\(M^T\)</span>. Hint, find a predictable process <span class="math inline">\(H\)</span> such that <span class="math inline">\(M^T = H \bullet M\)</span>.</p>
 </div>
 <div id="the-doob-decomposition" class="slide section level2">
 <h1>The Doob decomposition</h1>
@@ -474,7 +478,7 @@ X_n = E(X_n | \mathcal{F}_{n-1}) + \Delta M_n
 <div id="stochastic-integral" class="slide section level2">
 <h1>Stochastic integral</h1>
 <ul>
-<li>Predictable process: <span class="math inline">\(H = \{H(t): t \in [0, \tau]\}\)</span> is <em>predictable</em> if it <span class="math inline">\(H(t)\)</span> is measurable with respect to <span class="math inline">\(\mathcal{F}_{t-}\)</span>. If <span class="math inline">\(H(t)\)</span> is <em>left continuous</em> and adapted to <span class="math inline">\(\mathcal{F}_t\)</span> then it is predictable.</li>
+<li>Predictable process: <span class="math inline">\(H = \{H(t): t \in [0, \tau]\}\)</span> is <em>predictable</em> if <span class="math inline">\(H(t)\)</span> is measurable with respect to <span class="math inline">\(\mathcal{F}_{t-}\)</span>. If <span class="math inline">\(H(t)\)</span> is <em>left continuous</em> and adapted to <span class="math inline">\(\mathcal{F}_t\)</span> then it is predictable.</li>
 <li>The <em>stochastic integral</em> of <span class="math inline">\(H\)</span> with respect to <span class="math inline">\(M\)</span> is defined <span class="math display">\[
 I(t) = \int_0^tH(s) \, dM(s) = \lim_{n \rightarrow \infty} H_i\Delta M_i, 
 \]</span> where <span class="math inline">\([0, t]\)</span> is partitioned into <span class="math inline">\(n\)</span> parts of length <span class="math inline">\(t/n\)</span>, <span class="math inline">\(H_i = H((i-1)t / n)\)</span> and <span class="math display">\[
@@ -535,7 +539,7 @@ X(t) = X^*(t) + M(t)
 <p>If <span class="math inline">\(M\)</span> is a martingale and <span class="math inline">\(E(M^2(t)) &lt; \infty\)</span> for all <span class="math inline">\(t \geq 0\)</span>, then by Jensen’s inequality: <span class="math display">\[
 E(M^2(t) | \mathcal{F}_{s}) \geq (E(M(t) |\mathcal{F}_{s}))^2 = M^2(s),
 \]</span> which means …?</p>
-<p>Hence, we can apply the Doob-Meyer decomposition and there exists a unique predictable process <span class="math inline">\(&lt;M&gt;\)</span> such that <span class="math display">\[
+<p>Hence, we can apply the Doob-Meyer decomposition and there exists a unique predictable process <span class="math inline">\(\langle M\rangle\)</span> such that <span class="math display">\[
 M^2(t) - \langle M\rangle(t)
 \]</span> is a martingale. <span class="math inline">\(\langle M\rangle\)</span> is called the <em>predictable (quadratic) variation process</em>.</p>
 </div>
@@ -549,7 +553,7 @@ M^2(t) - \langle M\rangle(t)
 <p>Similarly, the predictable covariation process of two martingales <span class="math inline">\(M_1, M_2\)</span> is <span class="math display">\[
 d\langle M_1, M_2 \rangle(t) = Cov(dM_1(t), dM_2(t) | \mathcal{F}_{t-}). 
 \]</span> Like the regular covariance, we have <span class="math display">\[
-\langle M_1 + M_2 \rangle = \langle M_1\rangle + \langle M_2 \rangle + \langle M_1, M_2\rangle.
+\langle M_1 + M_2 \rangle = \langle M_1\rangle + \langle M_2 \rangle + 2\langle M_1, M_2\rangle.
 \]</span></p>
 </div>
 <div id="optional-variation" class="slide section level2">
@@ -559,7 +563,11 @@ d\langle M_1, M_2 \rangle(t) = Cov(dM_1(t), dM_2(t) | \mathcal{F}_{t-}).
 \]</span> where <span class="math inline">\([0, t]\)</span> is partitioned into <span class="math inline">\(n\)</span> parts of length <span class="math inline">\(t/n\)</span> and <span class="math display">\[
 \Delta M_i = M(it / n) - M((i-1)t / n).
 \]</span></p>
-<p>We also have <span class="math inline">\(M^2(t) - [M](t)\)</span> is a mean zero martingale. Why is <span class="math inline">\([M]\)</span> not the compensator of <span class="math inline">\(M^2\)</span>?</p>
+<p>We also have <span class="math inline">\(M^2(t) - [M](t)\)</span> is a mean zero martingale.</p>
+<p>Why is <span class="math inline">\([M]\)</span> not the compensator of <span class="math inline">\(M^2\)</span>?</p>
+<p>Finally, since <span class="math inline">\(M\)</span> is mean 0, <span class="math display">\[
+Var(M(t)) = E(M^2(t)) = E([M](t)) = E(\langle M\rangle(t)).
+\]</span></p>
 </div>
 <div id="poisson-process-example" class="slide section level2">
 <h1>Poisson process example</h1>
@@ -568,10 +576,10 @@ d\langle M_1, M_2 \rangle(t) = Cov(dM_1(t), dM_2(t) | \mathcal{F}_{t-}).
 </div>
 <div id="transformations-1" class="slide section level2">
 <h1>Transformations</h1>
-<p>For a predictible process <span class="math inline">\(H\)</span> and a mean 0 martingale <span class="math inline">\(M\)</span>, we know that <span class="math inline">\(I(t) = \int_0^t H(s) \, dM(s)\)</span> is a mean 0 martingale. Is is also true that <span class="math display">\[
+<p>For a predictable process <span class="math inline">\(H\)</span> and a mean 0 martingale <span class="math inline">\(M\)</span>, we know that <span class="math inline">\(I(t) = \int_0^t H(s) \, dM(s)\)</span> is a mean 0 martingale. It is also true that <span class="math display">\[
 \langle \int H\, dM \rangle = \int H \, d\langle M \rangle
 \]</span> and <span class="math display">\[
-[\int H\, dM] = \int H \, d[M]
+[\int H\, dM] = \int H \, d[M].
 \]</span></p>
 </div>
 <div id="putting-it-all-together" class="slide section level2">
@@ -583,7 +591,7 @@ N(t) = \Lambda(t) + M(t)
 <p>Assuming that it exists, we can write <span class="math inline">\(\Lambda(t) = \int_0^t\lambda(s)\, ds\)</span>. <span class="math inline">\(\lambda(t)\)</span> is called the <em>intensity process</em> and <span class="math inline">\(\Lambda(t)\)</span> the <em>cumulative intensity process</em>. The classical counting process martingale is written <span class="math display">\[
 M(t) = N(t) - \int_0^t\lambda(s)\, ds. 
 \]</span> Since <span class="math inline">\(M(t)\)</span> is mean 0, we have <span class="math inline">\(\lambda(t) dt = P(dN(t) = 1| \mathcal{F}_{t-})\)</span> since the steps are of size 1. Hence, <span class="math inline">\(Var(dM(t)|\mathcal{F}_{t-}) = Var(dN(t)|\mathcal{F}_{t-}) = \lambda(t)(1-\lambda(t))dt \approx \lambda(t) dt\)</span>, and we have <span class="math display">\[
-\langle M\rangle(t) = \int_0^t\lambda(s) \, ds = \Lambda(t)$.
+\langle M\rangle(t) = \int_0^t\lambda(s) \, ds = \Lambda(t).
 \]</span> Finally, <span class="math inline">\([M](t) = N(t)\)</span>, the process itself (since again the jumps are of size 1).</p>
 <p>From these, we get <span class="math display">\[
 \langle \int H \, dM \rangle(t) = \int_0^t H^2(s)\lambda(s) \, ds

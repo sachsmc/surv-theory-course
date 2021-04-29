@@ -24,6 +24,8 @@ Shorack, G. R., & Wellner, J. A. (2009). Empirical processes with applications t
 
 Read [Efron (1967)](Efron1967.pdf) and code up a version of the redistribution of mass algorithm in your favorite language. What is the "self-consistency" property and how is it used in Theorem 8.1? 
 
+- Here is one solution: [self-consistency.R](self-consistency.html)
+
 ### Further reading
 
 - Chapters 1 and 3 in ABG.
@@ -37,3 +39,13 @@ Read [Efron (1967)](Efron1967.pdf) and code up a version of the redistribution o
 
 - Chapter 2 in ABG.
 - Chapter 1 in Fleming and Harrington.
+
+### Assignment
+
+- Complete the derivations of the Poisson process example in the lecture (slides 14 and 20).
+- Read Chapter 3 in ABG.
+
+## Lecture 4 -- Martingale based analysis of nonparametric estimators and tests
+
+
+

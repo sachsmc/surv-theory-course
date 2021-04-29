@@ -11,7 +11,7 @@
 
 
 
-<title>Lecture notes and other resources</title>
+<title>self-consistency.R</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -258,69 +258,48 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Lecture notes and other resources</h1>
+<h1 class="title toc-ignore">self-consistency.R</h1>
 
 </div>
 
 
-<div id="lecture-1-introduction-and-overview" class="section level2">
-<h2>Lecture 1 – Introduction and overview</h2>
-<ul>
-<li><a href="notes/01-introduction.html">Slides (html)</a></li>
-</ul>
-<div id="assignment" class="section level3">
-<h3>Assignment</h3>
-<p>Read <a href="breslow-crowley-1974.pdf">Breslow and Crowley (1974)</a>, from Section 6 on. Think about how empirical process theory was used here, and why it was needed.</p>
-</div>
-<div id="further-reading" class="section level3">
-<h3>Further reading</h3>
-<p>Van der Vaart, A. W. (2000). Asymptotic statistics (Vol. 3). Cambridge university press.</p>
-<p>Shorack, G. R., &amp; Wellner, J. A. (2009). Empirical processes with applications to statistics. Society for Industrial and Applied Mathematics.</p>
-</div>
-</div>
-<div id="lecture-2-counting-processes-in-survival-analysis" class="section level2">
-<h2>Lecture 2 – Counting processes in survival analysis</h2>
-<ul>
-<li><a href="notes/02-counting-intro.html">Slides (html)</a></li>
-</ul>
-<div id="assignment-1" class="section level3">
-<h3>Assignment</h3>
-<p>Read <a href="Efron1967.pdf">Efron (1967)</a> and code up a version of the redistribution of mass algorithm in your favorite language. What is the “self-consistency” property and how is it used in Theorem 8.1?</p>
-<ul>
-<li>Here is one solution: <a href="self-consistency.html">self-consistency.R</a></li>
-</ul>
-</div>
-<div id="further-reading-1" class="section level3">
-<h3>Further reading</h3>
-<ul>
-<li>Chapters 1 and 3 in ABG.</li>
-<li>Chapter 0 in Fleming and Harrington.</li>
-</ul>
-</div>
-</div>
-<div id="lecture-3-martingales-definitions-properties-and-applications" class="section level2">
-<h2>Lecture 3 – Martingales – definitions, properties, and applications</h2>
-<ul>
-<li><a href="notes/03-martingale-intro.html">Slides (html)</a></li>
-</ul>
-<div id="further-reading-2" class="section level3">
-<h3>Further reading</h3>
-<ul>
-<li>Chapter 2 in ABG.</li>
-<li>Chapter 1 in Fleming and Harrington.</li>
-</ul>
-</div>
-<div id="assignment-2" class="section level3">
-<h3>Assignment</h3>
-<ul>
-<li>Complete the derivations of the Poisson process example in the lecture (slides 14 and 20).</li>
-<li>Read Chapter 3 in ABG.</li>
-</ul>
-</div>
-</div>
-<div id="lecture-4-martingale-based-analysis-of-nonparametric-estimators-and-tests" class="section level2">
-<h2>Lecture 4 – Martingale based analysis of nonparametric estimators and tests</h2>
-</div>
+<pre class="r"><code>library(gganimate)</code></pre>
+<pre><code>## Warning: package &#39;gganimate&#39; was built under R version 4.0.3</code></pre>
+<pre class="r"><code>n &lt;- 30
+time &lt;- sort(rexp(n))
+delt &lt;- rbinom(n, 1, .5)
+delt[1] &lt;- delt[n] &lt;- 1
+
+survhat &lt;- function(time, wts) {
+
+  data.frame(time = c(0, time),
+             prob = sapply(c(0, time), function(tt) {
+               sum(wts[time &gt; tt])
+             }))
+
+}
+
+
+i &lt;- 1
+wts &lt;- rep(1 / length(time), length(time))
+res &lt;- cbind(survhat(time, wts), index = i, rug = 0)
+
+for(j in which(delt == 0)) {
+
+  i &lt;- i + 1
+
+  wts[(j+1):length(wts)] &lt;- wts[(j+1):length(wts)] + wts[j] / (length(wts) - j)
+  wts[j] &lt;- 0
+  res &lt;- rbind(res, cbind(survhat(time, wts), index = i, rug = time[j]))
+
+}
+
+
+ggplot(res, aes(x = time, y = prob, xintercept = rug, group = index)) +
+  geom_step() +
+  geom_vline(aes(xintercept = rug), linetype = 2) + transition_states(index)</code></pre>
+<p><img src="self-consistency_files/figure-html/unnamed-chunk-1-1.gif" /><!-- --></p>
+<pre class="r"><code>anim_save(&quot;redistribute.gif&quot;)</code></pre>
 
 
 
