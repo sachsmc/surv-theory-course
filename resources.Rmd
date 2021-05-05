@@ -44,8 +44,16 @@ Read [Efron (1967)](Efron1967.pdf) and code up a version of the redistribution o
 
 - Complete the derivations of the Poisson process example in the lecture (slides 14 and 20).
 - Read Chapter 3 in ABG.
+- [Solution (pdf)](poisson-process.pdf)
 
 ## Lecture 4 -- Martingale based analysis of nonparametric estimators and tests
+
+- [Slides (html)](notes/04-nonparametrics.html)
+
+### Assignment
+
+- Read Section 3.3 of ABG, paying close scrutiny to section 3.3.5. 
+- Start to think about ideas for your presentations (options so far are relative survival, confidence bands, $k$-sample logrank tests)
 
 
 
