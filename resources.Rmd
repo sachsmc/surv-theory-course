@@ -55,5 +55,12 @@ Read [Efron (1967)](Efron1967.pdf) and code up a version of the redistribution o
 - Read Section 3.3 of ABG, paying close scrutiny to section 3.3.5. 
 - Start to think about ideas for your presentations (options so far are relative survival, confidence bands, $k$-sample logrank tests)
 
+## Lecture 5 -- Semiparametric Regression Models
 
+- [Slides (html)](notes/05-regression.html)
+
+### Assignment
+
+- Look at section 4.2.3, on martingale tests for the additive model. Can this test be inverted to obtain a confidence band procedure for the cumulative regression functions? 
+- Read [Cox (1972)](Cox-1972.pdf)
 
