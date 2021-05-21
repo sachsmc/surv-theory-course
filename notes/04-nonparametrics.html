@@ -561,10 +561,10 @@ S(t)S(s) \int_0^s \frac{\alpha(u)}{y(u)} \,du.
 \sqrt{n}(\frac{\hat{F}(\cdot) - F(\cdot)}{\hat{S}(\cdot)}) \Rightarrow W(\sigma(\cdot))
 \]</span> in <span class="math inline">\(D[0,\tau]\)</span>.</li>
 <li><span class="math display">\[
-\sup_{s \leq t}\left\{\frac{n}{\hat{\sigma}(t)}\right\}^{1/2}\left\{\frac{\hat{F}(s) - F(s)}{\hat{S}(s)}\right\} \rightarrow_d \sup_{x \in (0, 1)}W(x).
+\sup_{s \leq t}\left\{\frac{1}{\hat{\sigma}(t)}\right\}^{1/2}\left\{\frac{\hat{F}(s) - F(s)}{\hat{S}(s)}\right\} \rightarrow_d \sup_{x \in (0, 1)}W(x).
 \]</span></li>
 <li><span class="math display">\[
-\sup_{s \leq t}\left\{\frac{n}{\hat{\sigma}(t)}\right\}^{1/2}\left\{\frac{|\hat{F}(s) - F(s)|}{\hat{S}(s)}\right\} \rightarrow_d \sup_{x \in (0, 1)}|W(x)|.
+\sup_{s \leq t}\left\{\frac{1}{\hat{\sigma}(t)}\right\}^{1/2}\left\{\frac{|\hat{F}(s) - F(s)|}{\hat{S}(s)}\right\} \rightarrow_d \sup_{x \in (0, 1)}|W(x)|.
 \]</span></li>
 </ol>
 </div>
@@ -572,7 +572,7 @@ S(t)S(s) \int_0^s \frac{\alpha(u)}{y(u)} \,du.
 <h1>Confidence intervals for the KM</h1>
 <p>Note: for convenience’s sake we’re going to derive confidence limits for <span class="math inline">\(F\)</span> rather than <span class="math inline">\(S\)</span>.</p>
 <p>Using the first result, a pointwise <span class="math inline">\(\alpha\)</span>-level confidence interval for <span class="math inline">\(F(t)\)</span> is <span class="math display">\[
-\hat{F}(t) \pm \left\{\frac{\hat{\sigma}(t)}{n}\right\}^{1/2} \hat{S}(t) z_{1 - \alpha/2}.
+\hat{F}(t) \pm \{\hat{\sigma}(t)\}^{1/2} \hat{S}(t) z_{1 - \alpha/2}.
 \]</span> This has asymptotically correct coverage, but can be improved in finite samples using variance stabilizing transformations. Specifically, if <span class="math inline">\(h\)</span> is continuous and differentiable, then we can apply the regular delta method to get <span class="math inline">\(\sqrt{n}(h(\hat{S}(t)) - h(S(t))) \rightarrow_d h&#39;(S(t))N(0, \tau)\)</span>. Then <span class="math display">\[
 h^{-1}\left\{h(\hat{S}(t)) \pm z_\gamma h&#39;(\hat{S}(t))\hat{\tau}\right\}
 \]</span> defines the limits of a confidence interval for <span class="math inline">\(S(t)\)</span>. The yellow book gives the formula for <span class="math inline">\(h(x) = \log(-\log(x))\)</span>, and suggest also using the “arcsine-square-root transformation”.</p>
@@ -585,9 +585,9 @@ P\{l(s) \leq F(s) \leq u(s): 0\leq s \leq t\} \geq 1 - \alpha.
 \]</span></p>
 <p><em>Exercise</em>: Why does the collection of pointwise intervals not have the right coverage?</p>
 <p>Using result 3, we know that <span class="math display">\[
-P\left\{\sup_{s \leq t}\left\{\frac{n}{\hat{\sigma}(t)}\right\}^{1/2}\left\{\frac{|\hat{F}(s) - F(s)|}{\hat{S}(s)}\right\} \leq y\right\} \rightarrow P\left\{\sup_{x \in (0, 1)}|W(x)| \leq y\right\}.
+P\left\{\sup_{s \leq t}\left\{\frac{1}{\hat{\sigma}(t)}\right\}^{1/2}\left\{\frac{|\hat{F}(s) - F(s)|}{\hat{S}(s)}\right\} \leq y\right\} \rightarrow P\left\{\sup_{x \in (0, 1)}|W(x)| \leq y\right\}.
 \]</span> If we could compute quantiles of the distribution of the thing on the right, say <span class="math inline">\(\psi_\gamma\)</span>, then a confidence band is <span class="math display">\[
-\hat{F}(s) \pm \psi_\gamma \hat{S}(s)\left\{\frac{\hat{\sigma}(t)}{n}\right\}^{1/2}.
+\hat{F}(s) \pm \psi_\gamma \hat{S}(s)\left\{\hat{\sigma}(t)\right\}^{1/2}.
 \]</span></p>
 <p>These are the Gill bands.</p>
 <p><strong>Note</strong>: It is indeed <span class="math inline">\(\hat{\sigma}(t)\)</span>, so what can you infer about the width of these confidence bands?</p>
