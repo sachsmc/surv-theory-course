@@ -49,6 +49,7 @@ Read [Efron (1967)](Efron1967.pdf) and code up a version of the redistribution o
 ## Lecture 4 -- Martingale based analysis of nonparametric estimators and tests
 
 - [Slides (html)](notes/04-nonparametrics.html)
+- [NA variation processes (pdf)](notes/na-variation.pdf)
 
 ### Assignment
 
