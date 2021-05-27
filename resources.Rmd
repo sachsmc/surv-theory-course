@@ -64,4 +64,9 @@ Read [Efron (1967)](Efron1967.pdf) and code up a version of the redistribution o
 
 - Look at section 4.2.3, on martingale tests for the additive model. Can this test be inverted to obtain a confidence band procedure for the cumulative regression functions? 
 - Read [Cox (1972)](Cox-1972.pdf)
+- [Solution (pdf)](aareg-conf-bands.pdf)
 
+
+## Lecture 6 -- Parametric Models, by Andrea Discacciati
+
+- [Slides (html)](notes/06-parametric-models.html)

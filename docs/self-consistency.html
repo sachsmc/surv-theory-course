@@ -13,6 +13,7 @@
 
 <title>self-consistency.R</title>
 
+<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -263,9 +264,9 @@ $(document).ready(function () {
 </div>
 
 
-<pre class="r"><code>library(gganimate)</code></pre>
-<pre><code>## Warning: package &#39;gganimate&#39; was built under R version 4.0.3</code></pre>
-<pre class="r"><code>n &lt;- 30
+<pre class="r"><code>library(gganimate)
+
+n &lt;- 30
 time &lt;- sort(rexp(n))
 delt &lt;- rbinom(n, 1, .5)
 delt[1] &lt;- delt[n] &lt;- 1
