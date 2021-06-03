@@ -70,3 +70,7 @@ Read [Efron (1967)](Efron1967.pdf) and code up a version of the redistribution o
 ## Lecture 6 -- Parametric Models, by Andrea Discacciati
 
 - [Slides (html)](notes/06-parametric-models.html)
+
+## Lecture 7 -- Frailty, by Mark Clements
+
+- [Slides (html)](notes/07-frailty.html)
