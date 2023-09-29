@@ -22,17 +22,20 @@ After successfully completing this course, students will be able to:
 - Interpret the proportional hazards, additive hazards, and parametric regression models from the counting process perspective. 
 - Compare and contrast theoretical and methodological advances in survival analysis, including frailty models, multi-state models, joint models, causal inference and prediction for survival analysis.
 
+
 ## Contents of the course
 
-The course will cover the following topics in order:
+The course will cover the following topics:
 
-1. Overview and some basics about the empirical process and modern empirical process theory;
-2. Motivation of counting processes including notation and terminology. Representation of Nelson-Aalen, Kaplan-Meier, and Aalen-Johansen Estimators in terms of counting processes. Types of censoring and assumptions about censoring.
-3. Basic terminology and notation about martingales. Limit theorems involving martingales and how to apply them.
-4. Statistical inference, asymptotic normality and efficiency of Nelson-Aalen and Kaplan-Meier estimators. Logrank tests and its variants, asymptotic theory, confidence bands.
-5. Proportional hazards and additive hazards models from the counting process perspective.
-6. Parametric survival models, including accelerated failure time and flexible parametric models.
-7. Frailty models, noncollapsibility, and causal inference.
+1. Overview of the course. Counting process introduction, notation and terminology.
+2. Martingale introduction, terminology, and limit theorems. Censoring, types, assumptions. 
+3. Representation of Nelson-Aalen and Kaplan-Meier Estimators. Asymptotic analysis. Logrank tests and variants, Confidence bands.
+4. General regression models, likelihood and asymptotic analysis. Time dependent covariates and censoring assumptions.
+5. Proportional hazards models, stratified models, residuals. Additive hazards models, relative survival.
+6. Non martingale analysis using empirical process theory. Functional delta method and examples.
+7. Parametric models, including AFT and flexible parametric, frailty (Andrea Discacciati).
+8. Multi state models introduction and regression. Competing risks and illness death models (Therese Andersson).
+9. Causal inference, pseudo-observations, multiple time scales, recurrent events.
 
 
 ## Literature
@@ -51,11 +54,6 @@ Per K. Andersen, Ørnulf Borgan, Richard D. Gill, Niels Keiding. Statistical Mod
 
 
 
-## Location
-
-#### Zoom -- check your email
-
-
 ## Contact Information: 
 
-- Michael Sachs (e-mail: michael.sachs@ki.se), Department of Medical Epidemiology and Biostatistics (MEB), Karolinska Institutet
+- Michael Sachs (e-mail: michael.sachs@sund.ku.dk), Section of Biostatistics, University of Copenhagen.

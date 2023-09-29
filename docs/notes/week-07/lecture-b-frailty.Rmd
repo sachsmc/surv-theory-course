@@ -1,0 +1,573 @@
+---
+title: "Survival Theory Course"
+subtitle: "Frailty"
+author: Andrea Discacciati
+output: slidy_presentation
+editor_options: 
+  chunk_output_type: console
+---
+
+``` {r setup, include = FALSE}
+library(dplyr)
+library(ggplot2)
+
+knitr::opts_chunk$set(fig.width=7, fig.asp=.5, fig.align = 'center') 
+```
+
+
+```{r, eval = FALSE, include = FALSE}
+# Outline
+1. Univariate frailty models
+
+2. Multivariate (shared) frailty models
+```
+
+ 
+
+
+# Frailty and proportional fraily model
+
+A _frailty_ is a latent random variable $Z$ that captures heterogeneity in a population.
+
+In the univariate frailty model (at most one event per individual), the hazard rate of an individual is given as the product of an
+individual specific frailty $Z$ and a basic rate $\alpha(t)$, such that 
+
+\begin{align*}
+\alpha(t|Z) &= Z\alpha(t)
+\end{align*}
+
+Note that $Z$ and $\alpha(t)$ are _not_ observable. What may be observed in a
+population is not the individual hazard rates $\alpha(t|Z)$, but the net result for a number
+of individuals with differing frailties, or what we term the _population hazard
+rate_.
+
+
+
+
+
+# Population survival
+
+Given $Z$, (conditional) survival to time $t$ is given by
+
+\begin{align*}
+S(t|Z) &= \exp\left(-Z\int_0^t \alpha(u) du\right) \\
+&= \exp(-Z A(t))
+\end{align*}
+
+where $A(t)$ is the cumulative hazard. <!-- As from earlier in the course, $A(t)$ plays an important role in the mathematical development. -->
+
+The _population survival function_ is found by integrating $S(t|Z)$ over the distribution
+of $Z$, such that
+
+\begin{align*}
+S(t) &= \int_0^\infty f_Z(z) \exp(-zA(t)) dz \\ &= E_Z\left(\exp(-ZA(t))\right)
+\end{align*}
+
+$S(t)$ has a population averaged interpretation. If there are no covariates, $S(t)$
+may be seen as a weighted average of individual survival curves, where the weighing
+depends on the distribution of $Z$. 
+
+
+# Population hazard
+
+It is useful to introduce the _Laplace transform_ of $Z$, defined by
+
+\begin{align*}
+\mathcal{L}(c) &= E_Z\left(\exp(-cZ)\right)  \\ &= \int_0^{\infty} f_Z(z) \exp(-cz) dz
+\end{align*}
+
+and to write
+
+\begin{align*}
+S(t) &= \mathcal{L}(A(t))
+\end{align*}
+
+The _population hazard rate_, denoted by $\mu(t)$, may be found by differentiating $-\log(S(t))$, so that
+
+\begin{align*}
+\mu(t) &= \alpha(t)\frac{-\mathcal{L}'(A(t))}{\mathcal{L}(A(t))} \\
+& = \alpha(t) E(Z|T>t)
+\end{align*}
+
+$\mu(t)$ may be seen as a
+weighted average of individual hazards of individuals alive at time $t$, where the weighing
+depends on the distribution of $Z$ among the individuals alive at time $t$.
+
+The difference between the conditional and population hazard is determined by $\frac{-\mathcal{L}'(A(t))}{\mathcal{L}(A(t))} = E(Z|T>t)$,
+which is a decreasing function of $t$.
+
+
+# Notes
+
+-  The proportional frailty model is chosen for mathematical convenience. It
+represents a specific simplified view of how individual heterogeneity might act.
+There is no reason why heterogeneity should be determined at time zero, that it
+should be constant over time, or that it should act in a proportional manner.
+
+-  Nevertheless, this model is _useful_ to explain the behavior of the hazard (selection of healthier subjects over time) 
+and of the hazard ratio (deviations from proportionality of the hazards).
+
+- Given the results presented in the previous slides, it's natural to use frailty distributions with
+a tractable and explicit Laplace transform. Today, we will focus on the _gamma distribution_.
+See ABG Chapter 6 for other distributions.
+
+
+
+# Gamma frailty distribution
+
+A common distributional assummption for $Z$ is the _gamma distribution_, which has
+    probability density function
+
+\begin{align*}
+f_Z(z) &= \frac{\nu^\eta}{\Gamma(\eta)z^{\eta-1}\exp(\nu z)}
+\end{align*}
+
+where $\Gamma(\eta)=\displaystyle\int_0^\infty
+\displaystyle\frac{1}{z^{1-\eta}\exp(z)}dz$, $\nu$ is a scale parameter, and
+$\eta$ is a shape parameter.
+
+Given this parametrisation $E(Z)=\eta/\nu$ and $Var(Z)=\eta/\nu^2$.
+
+For identifiability, we let the frailty distribution $Z$ have mean equal to 1, so
+that $\eta=\nu$, which has $Var(Z)=\nu^{-1}$. 
+
+We now parameterise the distribution using the variance $\delta=\nu^{-1}$.
+$\delta$ is a natural measure of the degree of heterogeneity of the population.
+
+
+
+```{r, echo = FALSE}
+expand.grid(z = seq(0,4,length=501),
+            delta = c(0.01, 0.4,1,5)) %>%
+    mutate(y=stats::dgamma(z, shape=1/delta, scale=delta),
+           delta=factor(delta)) %>%
+    ggplot(aes(x=z, y=y, col=delta)) + geom_line(lwd = 2) +
+    ylim(0, 4) + xlab("z") +
+    ylab("Probability density") + theme_bw(base_size = 14)
+```
+
+
+# Gamma frailty distribution
+
+The Laplace transform is then given as
+
+\begin{align*}
+\mathcal{L}(c) &= (1+\delta c)^{-1/\delta}
+\end{align*}
+
+We can now express the population survival as
+
+\begin{align*}
+S(t) &= \mathcal{L}(A(t)) = (1+\delta A(t))^{-1/\delta}
+\end{align*}
+
+and the population hazard rate as
+
+\begin{align*}
+\mu(t) &= -\alpha(t) \frac{\mathcal{L}'(A(t))}{\mathcal{L}(A(t))} = \frac{\alpha(t)}{1+\delta A(t)}
+\end{align*}
+
+When $\delta \downarrow 0$, the variability of the frailty distribution tends to 0 and $\mu(t) \approx \alpha(t)$. As the variance $\delta$ increases,
+the population hazard function assumes the frailty shape of a hazard function that is "dragged down" (see next slide).
+
+
+# Gamma frailty distribution: population hazard rate
+
+Population hazard rate $\mu(t)$ when $\alpha(t) = 1$ and $\alpha(t) = t^2$, for different
+values of $\delta$.
+
+
+
+``` {r, echo = FALSE, warning =FALSE}
+expand.grid(t = seq(0,6,length=51),
+            delta = c(0, 0.4,1,2,5),
+            alpha = c("1", "t^2")) %>%
+    mutate(A = ifelse(alpha == "1", t, t^3/3),
+           mu = ifelse(alpha == "1", 1, t^2)/(1+delta*A),
+           delta=factor(delta)) %>% 
+    ggplot(aes(x=t, y=mu, col=delta)) + geom_line(lwd = 2) +
+    ylim(0,2.5) + xlab("Time") + facet_grid(~ alpha, labeller = label_both) + 
+    ylab("Population hazard rate") + theme_bw(base_size = 14)
+```
+
+
+When $\delta =  0$ there is no frailty effect and $\mu(t) = \alpha(t)$.
+
+The presence of frailty ($\delta>0$) pulls the population hazard rate down, transforming even an 
+ever-increasing basic rate ($\alpha(t) =t^2$, right panel) into a quite different shape.
+
+This can be explained by "frail" individuals (high levels of $Z$) developing the event earlier, leaving a 
+population consisting of "less frail" individuals (low levels of $Z$). Intuitively, does 
+this agree with the fact that $\mu(t) = \alpha(t) E(Z|T>t)$?
+
+If frailty is present, the observed population hazard rate does not say anything about the development at the 
+individual level, but it is mixed up with selection effects.
+
+
+# Gamma frailty distribution: effect on hazard ratio
+
+Assume that the basic hazard rates in two risk groups are $\alpha(t)$ and $r \alpha(t)$ with $r>1$.
+
+Assume that the frailty variables have the same gamma distribution with variance $\delta$ in both groups (ie, we 
+assume proportionality of the hazards to hold at the individual level).
+
+The population hazard ratio is
+
+\begin{align*}
+\frac{\mu_2(t)}{\mu_1(t)} &=r \frac{1+\delta A(t)}{1+r\delta A(t)}
+\end{align*}
+
+This expression is decreasing in $t$ and if $A(t) \rightarrow \infty$ when $t$ increases then the ratio approaches 1.
+
+Typically, if we assume proportionality at the level of the individual hazards, that proportionality
+will disappear at the population level.
+
+``` {r, echo = FALSE, warning =FALSE}
+expand.grid(t = seq(0,2,length=51),
+            delta = c(0, 0.5, 2),
+            alpha = c("1", "t^2"), 
+            r = 4) %>%
+    mutate(A = ifelse(alpha == "1", t, t^3/3),
+           phr = r * (1+delta*A) / (1+r*delta*A),
+           delta=factor(delta)) %>% 
+    ggplot(aes(x=t, y=phr, col=delta))+ geom_line(lwd = 2) +
+    xlab("Time") + facet_grid(r ~ alpha, labeller = label_both) +
+  ylim(0,4) +
+    ylab("Population hazard ratio") + theme_bw(base_size = 14)
+```
+
+In this case, the observed hazard ratio will be decreasing due to frailty but $\frac{\mu_2(t)}{\mu_1(t)}>1$. With other
+frailty distributions it may cross below one. With the stable frailty distribution, on the other hand, proportionality of the hazards holds
+at the individual and at the population level (but the proportionality constants are different); see ABG 6.5.
+
+
+
+<!-- # Frailty and estimation: identifiability -->
+
+<!-- When there is at most one event for each individual, frailty models will often not be _identifiable_.  -->
+<!-- In general, different frailty models can result in a given population hazard rate. An exception is when  -->
+<!-- it is possible to hypothesise a parametric model class for the basic hazard rate $\alpha(t)$. -->
+
+<!-- This may not be enough, though. With gamma frailty, we can divide and multiply $Z$ and $\alpha(t)$ by the same constant $c$,  -->
+<!-- thereby staying in the gamma model, but with a new scale parameter $\alpha = c / \nu$ and the same shape parameter $\eta$. That's  -->
+<!-- the reason for the restriction $\eta = \nu$. -->
+
+<!-- See ABG 6.4.1 for a parametric unit-mean-Gamma--Weibull model and ABG 6.9 for a  -->
+<!--   parametric frailty model with Weibull basic rate . -->
+
+<!--  This identifiability problem can be generally avoided in the multivariate case (clustered or recurrent events). -->
+
+
+# Identifiability
+
+When there is at most one event for each individual, frailty models will often not be _identifiable_. 
+
+Observing a population hazard ratio like the ones we saw earlier is compatible with two explanations:
+
+1. The proportional hazard assumption holds in the conditional model ($\alpha_2(t|Z) = Zr\alpha_1(t)$). What we observe is a result of unobserved heterogeneity (frailty).
+
+2. There is no heterogeneity. What we observe is the time-dependent effect of the covariate ($\alpha_2(t) = r(t) \alpha_1(t)$).
+
+Based on the (observed) population hazard rates alone, it is impossible to decide whether frailty is present or not. To fit a frailty model, we would first need to assume a conditional proportional hazards assumption and then select 
+a parametric model class for the basic hazard rate $\alpha(t)$.
+
+<!-- This may not be enough, though. With gamma frailty, we can divide and multiply $Z$ and $\alpha(t)$ by the same constant $c$,  -->
+<!-- thereby staying in the gamma model, but with a new scale parameter $c / \nu$ and the same shape parameter $\eta$. That's  -->
+<!-- the reason for the restriction $\eta = \nu$. The stable frailty distribution is never identifiable with univariate survival data. -->
+
+<!-- This issue is of course present also with no covariates (see exercises). -->
+
+This identifiability problem can be generally avoided in the multivariate case (clustered or recurrent events).
+
+
+<!-- # Gamma--Weibull model -->
+
+<!-- In the univariate case, the population hazard function obtained from assuming a Gamma-distributed frailty -->
+
+<!-- \begin{align*} -->
+<!-- \mu(t) = \frac{\alpha(t)}{1+\delta A(t)} -->
+<!-- \end{align*} -->
+
+<!-- defines a probability distribution $T$.  -->
+
+<!-- If we let the basic hazard be $\alpha(t) = bt^{k-1}$ (Weibull), then $T \sim \textsf{Burr}(\delta, b, k)$ with pdf -->
+
+<!-- \[ -->
+<!-- f(t) = bt^{k-1}\left(1 + \frac{\delta b}{k} t^k \right)^{-1-\frac{1}{\delta}} -->
+<!-- \] -->
+
+<!-- With covariates, $b$ is replaced by $\exp(\beta^\top x_i)$. -->
+
+<!-- $Var(T)$ increases as $\delta$ increases. As we said, $\delta$ is a measure -->
+<!-- of the degree of the heterogeneity in the population. -->
+
+``` {r, eval = FALSE, echo = FALSE, warning =FALSE}
+varT <- function(delta, b, k) {
+  1/delta * (k/(b*delta))^(2/k) * (beta(2/k+1, 1/delta-2/k) - 1/delta*beta(1/k+1, 1/delta-1/k)^2)
+}
+
+expand.grid(delta = seq(0, 1, length = 51)[-1],
+            b = 1,
+            k = 1:4) %>% 
+  mutate(alpha = paste0("t^", k-1),
+         var = varT(delta, b, k)) %>% 
+  ggplot(aes(x = delta, y = var, color = alpha)) +
+ geom_line(lwd = 2) +
+    ylim(0, 3) + xlab("delta") +  
+    ylab("Var(T)") + theme_bw(base_size = 14)
+```
+
+
+
+# Multivariate frailty models 
+
+We now consider grouped outcomes, where the groups can be defined in
+    terms of
+    
+  1.  _Clusters_, when several units that may fail are collected in a cluster;
+    
+  2.  _Recurrent events_, when several successive events of the same type are registered for each individual.
+    
+For grouped outcomes, we can consider _shared frailty
+    models_, ie the same frailty is shared by all the survival time of an 
+    individual or cluster $i$.
+  
+Frailty measures the specific risk level for a cluster or an individual,
+and given $Z$ the survival times are independent. We assume the proportional frailty model $\alpha(t|Z_i)=Z_i\alpha(t)$.
+    
+
+# Notation    
+    
+Consider $m$ independent clusters or individuals with index $i$. Let the actual event time be $T_{ij}$ and let the
+    observed (possibly right-censored) times be $\tilde{T}_{ij}$  for the $j=1,\ldots,n_i$ cluster units or inter-event times.
+
+The basic rate $\alpha(t)$ is a fixed function and assumed to be the
+    same for all $i$, but each cluster or individual has a separate independent
+    frailty $Z_i$ with $\boldsymbol{Z}=\{Z_1, \ldots, Z_i, \ldots, Z_m\}$. All of the frailty variables
+    are identically distributed.
+
+Lastly, let $D_{ij}$ be binary variables that are 1 if the event time is
+    uncensored and are 0 if censored. Let $D_{i\bullet}=\sum_j D_{ij}$,
+    which is the number of events for cluster or individual $i$.
+
+# Conditional likelihood
+
+Assume that, conditional on $\boldsymbol{Z}=\boldsymbol{z}$, censoring is independent and noninformative of $\boldsymbol{z}$ (ABGK Assumption IX.3.1 and IX.3.2).
+
+For each cluster of individual $i$, $\tilde{T}_{ij}$ and $D_{ij}$ are combined into the history $H_i=(\tilde{T}_{i1}, D_{i1}, \ldots, \tilde{T}_{in_i}, D_{in_i})$. Let $P(H_i)$
+    denote the joint distribution of $H_i$. Conditional with
+    respect to $Z_i$, the event times are independent with intensity
+    $Z_i\alpha(t)$.
+    
+ABG argue that their conditional likelihood $P(H_i|Z_i)$ can be deduced (sic) from 
+
+\begin{align}
+L_i(\theta) = \alpha(\tilde{T}_i;\theta)^{D_i}\exp\left\{- \int_0^{\tilde{T}_i} \alpha(t;\theta)dt\right\}
+\end{align}
+
+as
+
+\begin{align*}
+P(H_i|Z_i) &= \prod_{j=1}^{n_i} \left(\left(Z_i\alpha(\tilde{T}_{ij})\right)^{D_{ij}}\exp(-Z_i A(\tilde{T}_{ij}))\right)
+\end{align*}
+
+where $\theta$ is dropped from $\alpha$ to simplify notation.
+
+
+# Unconditional and total likelihood
+
+The unconditional likelihood follows by taking the expectation with respect to frailty variable $Z$
+
+\begin{align*}
+P(H_i) &= E_{Z_i}(P(H_i|Z_i))  \\ &= \prod_{j=1}^{n_i} \left(\alpha(\tilde{T}_{ij})^{D_{ij}}\right)
+E_{Z_i}\left(Z_i^{D_{i\bullet}}\exp(-Z_i V_i)\right)
+\end{align*}
+
+where $V_i=\sum_j A(\tilde{T}_{ij})$.
+
+
+Applying the fact that the $r\text{th}$ order derivative of a Laplace
+    transform is $\mathcal{L}^{(r)}(c)=(-1)^rE(Z^r\exp(-cZ))$, we can
+    now write the contribtion of individual or cluster $i$ as
+
+\begin{align*}
+P(H_i) &= \prod_{j=1}^{n_i} \left(\alpha(\tilde{T}_{ij})^{D_{ij}}\right) 
+(-1)^{D_{i\bullet}}\mathcal{L}^{(D_{i\bullet})}(V_i)
+\end{align*}
+
+and the total log-likelihood of $m$ conditionally independent individuals or clusters as
+
+\begin{align*}
+\log L &= \sum_{i=1}^m\left( \sum_{j=1}^{n_i} D_{ij}\log\left(\alpha(\tilde{T}_{ij})\right) +
+\log\left((-1)^{D_{i\bullet}}\mathcal{L}^{(D_{i\bullet})}(V_i)\right) \right)
+\end{align*}
+
+<!-- Estimation comes from maximising over a set of parameters, with -->
+<!--     covariance estimation by inversion of the negative Hessian. -->
+    
+Predicted frailty for cluster or individual $i$ is  $\hat{Z_i}=E(Z_i|H_i) = -\frac{\mathcal{L}^{(D_{i\bullet}+1)}(V_i)}{\mathcal{L}^{(D_{i\bullet})}(V_i)}$  (see ABG 7.2.3).
+
+
+# Frailty and counting processes
+
+Consider a multivariate counting process $\boldsymbol N = (N_i(t), i=1, \ldots, m)$,
+where each $N_i$ can have more than one jump, with individual intensity processes
+
+\[
+\lambda^*_i(t)=Z_iY_i(t)\alpha(t)
+\]
+
+$\boldsymbol Y=(Y_i(t), i=1, \ldots, m)$ are observable predictable processes
+such that, in case of _recurrent events_, $Y_i(t) = 1$  as long as the process is 
+observed and 0 afterwards, and, in case of _clustered data_,  $Y_i(t)$ represents
+the number of units still at risk. 
+
+<!-- The variables $Z_i$ are always i.i.d. frailties. -->
+
+<!-- <span style="color:grey">Typo in ABG 7.3: $\alpha_i(t)$ should read $\lambda_i(t)$.</span> -->
+
+The complete but unobservable data consists of the triplet $\{\boldsymbol Z, \boldsymbol N, \boldsymbol Y \}$,
+while the incomplete but observable data consists of $\{\boldsymbol N, \boldsymbol Y \}$.
+
+The intensity processes $\lambda^*_i(t)$ are relative to the history 
+$\mathcal{G}_{t} = \sigma\left\{\boldsymbol Z, \boldsymbol N(u), \boldsymbol Y(u+): 0 \le u \le t \right\}$ partly generated
+by unobserved quantities. When calculating likelihood functions, we have to consider
+intensities wrt the smaller history generated by the observed data:
+$\mathcal{F}_{t} = \sigma\left\{\boldsymbol N(u), \boldsymbol Y(u+): 0 \le u \le t \right\}$, with $\mathcal{F}_{t} \subset \mathcal{G}_{t}$.
+
+# Observed intensity processes
+
+The observed intensity process $\lambda_i(t)$ for the individual $N_i(t)$ is given 
+by the innovation theorem
+
+\begin{align}
+\lambda_i(t) &= E(E(dN_i(t)|\mathcal{G}_{t^-})|\mathcal{F}_{t^-}) \\ 
+&= E(\lambda^*_i(t)|\mathcal{F}_{t^-}) \\
+&= Y_i(t)\alpha(t)E(Z_i | \mathcal{F}_{t^-})
+\end{align}
+
+The observed intensity process can be written as (ABG 7.3)
+
+\[
+\lambda_i(t) = Y_i(t)\alpha(t) \frac{-\mathcal{L}^{(N_i(t^-)+1)}\left(\int_0^{t^-}Y_i(s)\alpha(s)ds\right)}{\mathcal{L}^{(N_i(t^-))}\left(\int_0^{t^-}Y_i(s)\alpha(s)ds\right)}
+\]
+
+If the $Z_i$ are unit-mean--Gamma distributed then
+
+\[
+\lambda_i(t) = Y_i(t)\alpha(t) \frac{1+\delta N_i(t^-)}{1+\delta\int_0^{t^-}Y_i(s)\alpha(s)ds}
+\]
+
+# Likelihood in counting process form
+
+If we specify a parametric class for $\alpha(t)$, we can plug $\lambda_i(t)$ into
+the log-likelihood
+
+\[
+\log L = \sum_{i=1}^m \int_0^{\tau} \log\lambda_i(s)dN_i(s)-\int_0^{\tau} \lambda_{\bullet}(s;) ds 
+\]
+
+Estimates may be found by maximising the likelihood directly and the 
+same counting process tools we saw last time can be used for
+proving large sample properties of the maximum likelihood estimators.
+
+If, conditional on $\boldsymbol{Z}=\boldsymbol{z}$, censoring is also noninformative on 
+$\theta$, then the log-likelihood above is a full marginal log-likelihood for $\alpha(t)$. Otherwise, it's
+a partial marginal log-likelihood. 
+
+In other words, the log-likelihood above is either the full or partial log-likelihood for $\theta$ based on 
+$\{\boldsymbol N$, $\boldsymbol Y\}$, ie in the marginal/incomplete data experiment when $\boldsymbol Z$ 
+is not observed.
+
+Further details are in ABGK IX.2, IX.3, IX.4.1.
+
+<!-- <span style="color:grey">Typo in ABGK Equation (9.3.5): the second product is over $t$, and not over $i$.</span> -->
+
+
+# Software implementation
+
+Fully parametric frailty models are available here:
+
+- R: `parfm`, `frailtyEM`, `frailtypack`, `rstpm2`
+
+- Stata: `streg`, `merlin`
+
+- SAS: `proc nlmixed`
+
+
+
+# Example, Gamma-Weibull model
+
+Using the `parfm` package.
+
+```{r, message = FALSE}
+library(parfm)
+
+bc <- read.csv("/Users/anddis/OneDrive - KI.SE/other/teaching/tsa_2022/bc.csv")
+bc$id <- 1:nrow(bc)
+head(bc)
+
+frailty.mod <- parfm(Surv(t, dead) ~ 1, 
+                     dist = "weibull", 
+                     frailty = "gamma", 
+                     cluster = "id",
+                     data = bc)
+frailty.mod
+```
+
+
+`Z.hat`, $\hat{Z_i}= -\frac{\mathcal{L'}(A(t))}{\mathcal{L}(A(t))}$
+
+```{r}
+Z.hat <- predict(frailty.mod)
+hist(Z.hat)
+```
+
+```{r, include = FALSE}
+hWeibull <- function(t, lambda, rho) lambda * rho * t^(rho-1)
+HWeibull <- function(t, lambda, rho) lambda * t^rho
+```
+
+`cond.haz`, $\alpha(t| Z) = Z \alpha(t)$
+
+```{r}
+timeseq <- seq(0, max(bc$t), length = 501)
+alpha.hat <- hWeibull(timeseq, 
+                      frailty.mod["lambda", 1], 
+                      frailty.mod["rho", 1])
+cond.haz <- outer(alpha.hat, Z.hat)
+```
+
+`pop.haz`, $\mu(t) = \frac{\alpha(t)}{1+\theta A(t)}$
+
+```{r}
+mu.hat <- function(t, lambda, rho, theta) {
+  (hWeibull(t, lambda, rho)) / 
+    (1 + frailty.mod["theta", 1] * HWeibull(t, lambda, rho))
+}
+
+pop.haz <- mu.hat(timeseq, 
+                  frailty.mod["lambda", 1], 
+                  frailty.mod["rho", 1], 
+                  frailty.mod["theta", 1])
+```
+
+`pop.haz.empirical`, $\mu(t) = \alpha(t) \bar Z_{T>t}$
+
+```{r}
+pop.haz.empirical <- sapply(
+  timeseq, 
+  function(x) mean(Z.hat[bc$id[bc$t > x]])
+) *  alpha.hat
+```
+
+```{r, fig.width=7, fig.asp=.7}
+matplot(timeseq, cond.haz, type = "l", col = "grey75", lty = 1,
+        ylab = "Conditional / population hazard", xlab = "Time",
+        main = "Gamma-Weibull frailty model")
+lines(timeseq, pop.haz, col = "red", lwd = 5)
+lines(timeseq, pop.haz.empirical, type = "s", lwd = 2)
+```
+
+
+

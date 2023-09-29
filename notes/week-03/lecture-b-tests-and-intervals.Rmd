@@ -1,0 +1,317 @@
+---
+title: Survival Theory Course
+subtitle: Nonparametric statistics -- Tests and confidence bands
+author: Michael Sachs
+output: slidy_presentation
+---
+
+## Outline
+
+1. Logrank test
+2. Confidence bands
+
+
+
+## Two sample logrank tests
+
+The setup: suppose we have two distributions $F_1$, $F_2$ and we wish to test the null hypothesis $H_0: F_1 = F_2$. This is equivalent to $S_1 = S_2$ (survival functions), $A_1 = A_2$ (the cumulative hazards) and $\alpha_1 = \alpha_2$ (the hazards if they exist). For 
+
+\[
+\hat{A}_j(t) = \int_0^t\frac{J_j(u)}{Y_j(u)}\, dN_j(u), 
+\]
+and a generic weight process $L(t)$ that satisfies $L(t) \geq 0$ and $L(t) = 0$ whenever $J_1(t)J_2(t) = 0$, define the un-normalized statistic
+\[
+Z_1(t) = \int_0^t L(u) \left(d\hat{A}_1(u) - d\hat{A}_2(u)\right) = \int_0^{t} \frac{L(u)}{Y_1(u)} \, dN_1(u) - \int_0^{t} \frac{L(u)}{Y_2(u)} \, dN_2(u).
+\]
+
+Under the null, we have $dN_j(t) = \alpha(t)Y_j(t)dt + dM_j(t)$ where $\alpha = \alpha_1 = \alpha_2$ and $M_j$ are martingales. Plugging this into the above, the compensators cancel out, and we are left with 
+
+\[
+Z_1(t) = \int_0^{t} \frac{L(u)}{Y_1(u)} \, dM_1(u) - \int_0^{t} \frac{L(u)}{Y_2(u)} \, dM_2(u).
+\]
+
+This is a difference between two transformations of mean 0 martingales and hence, is also a mean 0 martingale. 
+
+The more general version of the martingale central limit theorem applies here also, so it remains to check the conditions. 
+
+## More general MCLT
+
+For $M^{(n)}_j(t) = N_j^{(n)}(t) - \int_0^t\lambda_j^{(n)}(s) \, ds$ and predictable processes $H_j^{(n)}$, for $j = 1, \ldots, k$, we consider
+\[
+\sum_{j=1}^k \int_0^tH_j^{(n)}(s) \, dM_j^{(n)}(s). 
+\]
+The above converges in distribution to a mean 0 Gaussian martingale under these two conditions: 
+
+1. $\sum_j \int H_j^{(n)}(t)^2\lambda_j^{(n)}(t)\, ds \rightarrow_p V(t) > 0$ for all $t$ as $n \rightarrow \infty$
+
+2. $\sum_j \int H_j^{(n)}(t)I(|H_j^{(n)}(s)| > \epsilon)\lambda_j^{(n)}(s) ds \rightarrow_p 0$ for all $t$ as $n \rightarrow \infty$. 
+
+So instead of a sequence of martingales, we have a sequence of sums of stochastic integrals of martingales. 
+
+
+## Weight functions
+
+See table 3.2 of ABG. 
+
+1. $L(t) = Y_1(t)Y_2(t) / (Y_1(t) + Y_2(t))$ is the Log-rank test. It is a generalization of the Mantel-Haenszel statistic.
+2. $L(t) = Y_1(t)Y_2(t)$ is the Gehan-Breslow statistic. It is a generalization of the Mann-Whitney/Wilcoxon statistic.
+3. $L(t) = \hat{S}(t-)^\rho Y_1(t)Y_2(t) / (Y_1(t) + Y_2(t))$ is the Fleming and Harrington or G-$\rho$ family of statistics. 
+4. $L(t) = \hat{S}(t-)^\rho (1 - \hat{S}(t-))^\gamma Y_1(t)Y_2(t) / (Y_1(t) + Y_2(t))$ further generalizes 3. 
+
+
+Different choices of $L$ emphasize different patterns of differences in the survivor functions (i.e., early vs late). 
+
+
+## More than 2 samples
+
+Suppose we have $k$ samples with counting processes $N_1, \ldots, N_k$, having intensity $\lambda_1, \ldots, \lambda_k$ with form $\lambda_h(t) = \alpha_h(t)Y_h(t)$. 
+
+The null hypothesis of interest is $H_0: \alpha_1 = \ldots = \alpha_k = \alpha$. The Nelson-Aalen estimators of each cumulative hazard are as before, and we introduce the common cumulative hazard (assumed) $A(t) = \int \alpha(s) ds.$ This can be estimated by 
+\[
+\hat{A}(t) = \int_0^t \frac{J(s)}{Y_\bullet(s)} \, dN_\bullet (s), 
+\]
+where $N_\bullet = \sum_{h=1}^k N_h$ and likewise for $Y$. 
+
+## K samples continued
+
+We introduce 
+\[
+\tilde{A}(s) = \int_0^t \frac{J_h(s)}{Y_\bullet(s)} \, dN_\bullet (s), 
+\]
+with the subscript $h$ on $J$, this restricts $\hat{A}$ to times where $Y_h(t) > 0$. Now under the null hypothesis
+\[
+\hat{A}_h(t) - \tilde{A}_h(t) = \int_0^t\frac{J_h(s)}{Y_h(s)} \, dM_h (s) - \int_0^t\frac{J_h(s)}{Y_\bullet(s)} \, dM_\bullet (s)
+\]
+where $M_\bullet = \sum M_h$. Thus under the null their difference is a martingale. 
+
+## The test statistic
+
+We thus introduce for a predictable weight process $K_h(s) = Y_h(s) K(s)$, 
+\[
+Z_h(t) = \int_0^tK_h(s) \, d(\hat{A}_h - \tilde{A}_h)(s)
+\]
+for $h = 1, \ldots, k$. Under the null, 
+\[
+Z_h(t) = \int K(s) \, dM_h(s) - \int K(s)\frac{Y_h(s)}{Y_\bullet(s)}\, dM_\bullet(s) =
+\]
+\[
+\sum_{l = 1}^k\int_0^tK(s)\left(1(l=h) - \frac{Y_h(s)}{Y_\bullet(s)}\right)\,dM_l(s).
+\]
+It follows that the $Z_h$ are martingales. 
+
+## Continued
+
+One can derive the predictable variation and covariation processes for $Z_h$ and $(Z_h, Z_l)$, estimators thereof, and hence the covariation process matrix $\hat{\Sigma}(t)$ which is an estimate of the covariation process of the vector $\mathbf{Z}(t) = (Z_1(t), \ldots, Z_k(t))^\top$. 
+
+Then a reasonable test statistic is 
+
+\[
+X^2(t) = \mathbf{Z}(t)^\top\hat{\Sigma}(t)^{-1}\mathbf{Z}(t), 
+\]
+where $t$ is chosen to be some ``large'' time. 
+
+Using the martingale central limit theorem, one can show that the vector $\mathbf{Z}$ converges to a vector of mean 0, Gaussian martingales.
+
+For a fixed, large time $t$, the quadratic form above is approximately chi-squared with $k - 1$ degrees of freedom.
+
+_Exercise:_ Show how this reduces in the case where $k = 2$. 
+
+## Stratified tests
+
+For counting processes $N_{hs}(t)$, $h = 1, \ldots, k$, $s = 1, \ldots, m$, with corresponding intensity processes $\lambda_{hs}(t) = \alpha_{hs}(t)Y_{hs}(t)$, we may be interested in testing
+\[
+H_0: \alpha_{1s} = \ldots = \alpha_{ks}, s = 1, \ldots, m.
+\]
+To do this, we can construct the same test statistics within each strata, and then take the sum over strata. 
+
+
+# Confidence intervals for the KM
+
+
+
+## Asymptotic distribution of KM
+
+Result: With $\hat{F}(t) = 1 - \hat{S}(t)$, and assuming
+\[
+\sup_{t}|Y(t)/n - y(t)| \rightarrow_p 0,
+\]
+then
+\[
+\sqrt{n}(\hat{S}(\cdot) - S(\cdot)) \Rightarrow -S(\cdot) \, W(\sigma(\cdot)), 
+\]
+in $D[0,\tau]$, where $W$ is a Brownian motion, and $\sigma(t) = \int_0^t \frac{\alpha(u)}{y(u)} \, du.$
+
+The covariance of the limiting process evaluated at $0 \leq s \leq t$ is 
+\[
+S(t)S(s) \int_0^s \frac{\alpha(u)}{y(u)} \,du.
+\]
+
+## Variance estimation
+
+Greenwood's variance estimator: 
+
+\[
+\widehat{Var}(\hat{S}(t)) = \hat{\sigma}(t) = \hat{S}(t)^2\int_0^t\frac{J(u)}{Y(u)(Y(u) - \Delta N(u))} \, dN(u).
+\]
+
+Using the result from before, a pointwise $\alpha$-level confidence interval for $F(t)$ is 
+\[
+\hat{F}(t) \pm \{\hat{\sigma}(t)\}^{1/2} \hat{S}(t) z_{1 - \alpha/2}.
+\]
+This has asymptotically correct coverage, but can be improved in finite samples using variance stabilizing transformations. 
+
+Specifically, if $h$ is continuous and differentiable, then we can apply the regular delta method to get $\sqrt{n}(h(\hat{S}(t)) - h(S(t))) \rightarrow_d h'(S(t))N(0, \tau)$. Then 
+\[
+h^{-1}\left\{h(\hat{S}(t)) \pm z_\gamma h'(\hat{S}(t))\hat{\tau}\right\}
+\]
+defines the limits of a confidence interval for $S(t)$. The yellow book gives the formula for $h(x) = \log(-\log(x))$, and suggest also using the "arcsine-square-root transformation". 
+
+Can we define a confidence band for the process $F$? 
+
+## Confidence bands
+
+Fleming and Harrington define a confidence band as follows: two processes $l$ and $u$ provide a $1 - \alpha$ level confidence band for $F$ on an interval $[0, t]$ if $l(s) \leq u(s)$ for $0 \leq s \leq t$ and 
+\[
+P\{l(s) \leq F(s) \leq u(s): 0\leq s \leq t\} \geq 1 - \alpha. 
+\]
+
+_Exercise_: Why does the collection of pointwise intervals not have the right coverage? 
+
+Using result 3, we know that 
+\[
+P\left\{\sup_{s \leq t}\left\{\frac{n}{\hat{\sigma}(t)}\right\}^{1/2}\left\{\frac{|\hat{S}(s) - S(s)|}{\hat{S}(s)}\right\} \leq y\right\} \rightarrow P\left\{\sup_{x \in (0, 1)}|W(x)| \leq y\right\}.
+\]
+If we compute quantiles of the distribution of the thing on the right, say $\psi_\gamma$, then a confidence band is 
+\[
+\hat{S}(s) \pm \psi_\gamma \hat{S}(s)\left\{\hat{\sigma}(t)/n\right\}^{1/2}.
+\]
+
+These are the Gill bands. 
+
+__Note__: It is indeed $\hat{\sigma}(t)$, so what can you infer about the width of these confidence bands? 
+
+
+## Hall and Wellner Bands
+
+Starting with the convergence in distribution
+\[
+\sqrt{n}\frac{\hat{S} - S}{S} \rightarrow_d W(\sigma),
+\]
+they rescale the Brownian motion $W$ in order to get a Brownian Bridge. 
+
+Let $K(s) = \frac{\sigma(s)}{1 + \sigma(s)}$ and $\bar{K} = 1 - K$. If $Z \sim W(\sigma(\cdot))$, then  
+\[
+Z * \bar{K} / S =_d B\circ K
+\]
+where $B$ is a Brownian bridge process on $[0, 1]$. The distribution of this (on the right) is well-known and lots of methods for computing for it are developed. 
+
+## The HW band construction process
+
+Decide on a confidence level $\alpha$. 
+
+1. Fix $T$ smaller than the largest uncensored observation
+2. Estimate $0 \leq a \leq 1$ by $\hat{a} = \hat{K}(T)$. 
+3. Set
+\[
+G_{\hat{a}}(\lambda) = P\{\sup_{0\leq t\leq \hat{a}} | B(t) |\leq \lambda\} = 1 - \alpha
+\]
+and solve for $\lambda$. Then the band satisfies for all $0 \leq s \leq T$, 
+\[
+P(\hat{S} - \lambda D(s) \leq S(s) \leq \hat{S} + \lambda D(s)) \rightarrow_p G_{\hat{a}}(\lambda), 
+\]
+where $D(s) = \sqrt{n}(\hat{S}(s) / \hat{\bar{K}}(s))$. 
+
+## Equal precision bands
+
+The ``Equal Precision'' (EP) bands, developed by Nair (1984), are an attempt to improve upon the Hall-Wellner bands. 
+
+The EP bands are \[
+\hat{S}(t) \pm e_{1-\alpha} \frac{\hat{\sigma}(t)}{\sqrt{n}}\hat{S}(t),
+\] 
+for \(t\) such that
+\(a < \frac{\hat{\sigma(t)}}{1 - \hat{\sigma(t)}} < b\) and where
+\(e_{1 - \alpha}\) is the \(1 - \alpha\) quantile of a different
+transformation of a Brownian Bridge from the Hall-Wellner bands. 
+
+These are called equal precision bands, because the bands are proportional to the standard deviation process, just like pointwise confidence intervals
+are. In fact, the only difference between pointwise confidence intervals
+and the EP bands are the critical value. 
+
+Computation of the critical value \(e_{1 - \alpha}\) is not that straightforward, but it has been tabulated for
+certain values of \(\alpha, a, b\) 
+
+## Likelihood ratio 
+
+The nonparametric likelihood ratio is defined
+as \[
+R(p, t) = \frac{\sup \{L(S): S(t) = p, S \in \Theta\}}{L(\hat{S})}
+\] where \(\Theta\) is the set of all possible survival functions, i.e.,
+all monotonic nonincreasing functions on \([0, \infty]\). For a fixed
+\(0 \leq a < b < \infty\), the likelihood based confidence band is \[
+\mathcal{B} = \{S(t): -2\log R(S(t), t) \leq C^2(t), t \in [a,b]\}
+\] where \(C(t)\) is computed based on an approximation of the limiting
+process of the likelihood ratio, which turns out to be another
+transformation of the Brownian bridge.
+
+How to compute this? 
+
+## Likelihood
+
+For counting process $N(t)$ and at risk process $Y(t)$, the nonparametric likelihood under independent censoring is 
+\[
+\widetilde{\prod}_{t >0} (Y(t) \alpha(t) dt)^{dN(t)} (1 - Y(t)\alpha(t)dt)^{1 - dN(t)}.
+\]
+This cannot be maximized for general cumulative hazards, but if we restrict ourselves to discrete cumulative hazards then we can maximize instead 
+\[
+L(A) = \prod_{t > 0}(Y(t) \Delta A(t))^{\Delta N(t)} (1 - \Delta A(t))^{Y(t) - \Delta N(t)}.
+\]
+Under a general null of the form $H_0: A = A_0$, let $\hat{A}_0$ denote the estimator of the cumulative hazard under that null and $\hat{A}$ the usual estimator. Then the likelihood ratio statistic is 
+\[
+2\int_0^t -\log(\Delta \hat{A}_0(s)/\Delta \hat{A}(s)) + (\frac{1}{\Delta \hat{A}(s)} - 1)\log \left(\frac{1 - \Delta \hat{A}(s)}{1 - \Delta \hat{A}_0(s)}\right) \, dN(s). 
+\]
+To compute this, we basically need to solve for $\hat{A}_0$. 
+
+Thomas and Grunkemeier (1975) did this for a fixed $t$ to construct pointwise confidence intervals for the survival curve. 
+
+Hollander, McKeague and Yang (1997) did this for $t$ in an interval to construct simultaneous confidence bands. 
+
+## Transformations 
+
+The linear bands have asymptotically correct coverage, but can be improved in finite samples using variance stabilizing transformations. Specifically, if $h$ is continuous and differentiable, then we can apply the regular delta method to get $\sqrt{n}(h(\hat{S}(t)) - h(S(t))) \rightarrow_d h'(S(t))N(0, \tau)$. Then 
+\[
+h^{-1}\left\{h(\hat{S}(t)) \pm z_\gamma h'(\hat{S}(t))\hat{\tau}\right\}
+\]
+defines the limits of a confidence interval for $S(t)$. The yellow book gives the formula for $h(x) = \log(-\log(x))$, and suggest also using the "arcsine-square-root transformation". 
+
+The _log-transformed_ bands are based on \[
+\{\hat{S}(t)^\theta, \hat{S}(t)^{1/\theta}\}
+\] where for the Hall-Wellner bands, \[
+\theta = \theta_{HW} = \exp\left\{\frac{k_{1-\alpha}(1 + \hat{\sigma}(t))}{\sqrt{n} \log \hat{S}(t)}\right\}
+\] while for the EP bands, \[
+\theta = \theta_{EP} = \exp\left\{\frac{e_{1-\alpha}\hat{\sigma}(t)}{\log \hat{S}(t)}\right\}.
+\]
+
+Another type of transformation is called the _arcsine-square root_
+transform, in which the limits of the confidence bands are \[
+\mbox{upper } = \sin^2(\min\{0, \arcsin \sqrt{\hat{S}(t)} - \gamma \sqrt{\frac{\hat{S}(t)}{1 - \hat{S}(t)}}\})
+\] \[
+\mbox{lower } = \sin^2(\min\{\pi/2, \arcsin \sqrt{\hat{S}(t)} + \gamma \sqrt{\frac{\hat{S}(t)}{1 - \hat{S}(t)}}\})
+\] where to get Hall-Wellner bands we use \[
+\gamma = \gamma_{HW} = \frac{k_{1-\alpha}(1 + \hat{\sigma}(t))}{2\sqrt{n}}
+\] and to get EP bands we use \[
+\gamma = \gamma_{EP} = \frac{e_{1-\alpha}\hat{\sigma}(t)}{2}.
+\]
+
+The likelihood ratio based bands do not need any transformation as they are constrained to be between 0 and 1. 
+
+## In practice
+
+- The survival package in R does logrank tests in the `survdiff` function. 
+- It includes the general G-$\rho$ family of tests, for $k$ samples and also stratified
+- _Possible project idea:_ selection of the weights in the logrank test setting. 
+
+
+- The best package for confidence bands is `km.ci`, which implements the EP and Hall-Wellner bands, but using tables for the critical values. 
+- It also does the likelihood ratio based intervals only. _Exercise_: can you develop a method to find critical values so that the LR intervals can be adjusted to construct confidence bands? 
+
+

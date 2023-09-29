@@ -1,0 +1,37 @@
+---
+title: B5440 -- Exercise 1, Review and self-assessment
+output: pdf_document
+fontsize: 12pt
+---
+
+# Exercises
+
+1. Suppose $X, X_1, \ldots, X_n$ are independent and identically distributed with mean 0 and finite variance but *not* normal. The t-statistic to test the null hypothesis that $E(X) = 0$ is
+\[
+\frac{\overline{X}_n}{S_n/\sqrt{n}},
+\]
+where $\overline{X}_n$ is the sample mean and $S_n$ is the sample standard deviation. Show that the t-statistic converges in distribution to a standard normal and note which named theorems you are using. 
+
+2. Suppose $X \sim \mbox{exponential}(\theta)$ and $Y \sim \mbox{exponential}(\eta)$ with densities $f_\theta(x) = \theta e^{-\theta x}$, $f_\eta(y) = \eta e^{-\eta x}$. In the _uncensored_ case, we observe both $X$ and $Y$. In the _right censored_ case we observe $(Z, \Delta) = (\min(X, Y), 1\{X \leq Y\})$. 
+
+(a) Densities.  
+i. Find the joint density of $(X, Y)$.
+ii. Find the joint density of $(Z, \Delta)$. 
+
+(b) Scores. Find the scores for $\theta$ and $\eta$:
+i. in the uncensored case. 
+ii. in the right censored case. 
+
+(c) Information. Find the information for $\theta$: 
+i. in the uncensored case. 
+ii. in the right censored case
+
+3. If $X \geq 0$ and has distribution function $F$, show that 
+\[
+E(X) = \int_0^\infty (1 - F(x)) \, dx. 
+\]
+
+
+# Reading
+
+ABG Chapter 1. 

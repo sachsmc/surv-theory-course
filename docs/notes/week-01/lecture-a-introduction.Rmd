@@ -1,0 +1,290 @@
+---
+title: Survival Theory Course
+subtitle: Introduction and overview
+author: Michael Sachs
+output: slidy_presentation
+---
+
+# Structure of the course
+
+## Learning outcomes
+
+- Summarize basic asymptotic theory for processes and sketch derivations of basic results involving the empirical cumulative distribution function.
+- Identify notation and terminology for counting processes and connect them to survival statistics. 
+- Reframe nonparametric estimators of survival quantities in terms of counting processes.
+- Paraphrase the martingale central limit theorem and describe how it can be used to perform inference for the Kaplan-Meier estimator.
+- Interpret the proportional hazards, additive hazards, and parametric regression models from the counting process perspective. 
+- Compare and contrast theoretical and methodological advances in survival analysis, including frailty models, multi-state models, joint models, causal inference and prediction for survival analysis.
+
+## Weekly Schedule
+
+- Lectures on Monday and Friday from 11-12. Exercises workshop Wednesday from 10-12, help available from 11-12. 
+- Lectures will be recorded and posted on canvas, workshop participation optional, if you want we can organize in-person sessions at KI. 
+- Post your exercise solutions on Canvas before the following Wednesday for feedback (use any format you like as long as it is legible)
+
+
+1. Overview of the course. Counting process introduction, notation and terminology.
+2. Martingale introduction, terminology, and limit theorems. Censoring, types, assumptions. 
+3. Representation of Nelson-Aalen and Kaplan-Meier Estimators. Asymptotic analysis. Logrank tests and variants, Confidence bands.
+4. General regression models, likelihood and asymptotic analysis. Time dependent covariates and censoring assumptions.
+5. Proportional hazards models, stratified models, residuals. Additive hazards models, relative survival.
+6. Non martingale analysis using empirical process theory. Functional delta method and examples.
+7. Parametric models, including AFT and flexible parametric, frailty (Andrea).
+8. Multi state models introduction and regression. Competing risks and illness death models (Therese).
+9. Causal inference, pseudo-observations, multiple time scales, recurrent events.
+10. Individual study to work on projects. 
+11. Presentations of projects (Exam) -- Week 21. 
+
+## Student seminars
+
+- Each of you choose a topic in survival analysis
+- Study the theory on that topic from the counting process perspective (we will suggest resources)
+- Prepare a 20 minutes presentation for that day or a 4 page paper summarizing the topic
+- Topics: 
+    1. Recurrent events/Andersen-Gill model
+    2. Multi-state models
+    3. Joint longitudinal and survival models
+    4. Pseudo-observation regression
+    5. Choose your own
+    
+## General philosophy and goal of this course
+
+- Not going to dwell on the mathematical formalism.
+- Wade through the jargon and develop a general understanding of the theory
+- What it means, why it is important, and how the theory is used to develop and evaluate methods
+
+### Questions? 
+
+# Review of classicial asymptotics
+
+## Simple statistics
+
+In Theory I, and maybe before, you studied _finite-dimensional_ parameters and estimators of them. 
+
+Consider a random sample $X_1, X_2, \ldots, X_n$ from some unspecified distribution $F$ and an estimator: 
+
+\[
+\hat{\mu}_n = T(X_1, \ldots, X_n), 
+\]
+
+where $T$ is a mapping from $\mathbb{R}^n$ to $\mathbb{R}$, i.e., a function from the sample to the real line. 
+
+You studied the asymptotic behavior of $\hat{\mu}_n$, what happens when $n \rightarrow \infty$. Why asymptotics? 
+
+
+## Modes of convergence
+
+1. In probability: $\hat{\mu}_n \rightarrow_p \mu$ if $\lim_{n \rightarrow \infty} P(|\hat{\mu}_n - \mu| < \varepsilon) = 1$ for every $\varepsilon$. 
+2. Almost surely: $\hat{\mu}_n \rightarrow_{as} \mu$ if $P(\lim_{n \rightarrow \infty}|\hat{\mu}_n - \mu| < \varepsilon) = 1$ for every $\varepsilon$. 
+3. In distribution $\hat{\mu}_n \rightarrow_d M$ if the cumulative distributions functions $F_n$ of $\hat{\mu}_n$ and $F_M$ of $M$ satisfy $\lim_{n\rightarrow \infty} F_n(x) = F_M(x)$ for every continuity point $x$ of $F_M$
+
+**How do we prove such things for specific statistics?**
+
+### From basic principles
+
+1. Make some assumptions about $F$, e.g., finite mean, finite variance
+2. Work with moment generating functions or characteristic functions instead of CDFs
+3. Manipulate the expressions in the definitions, apply a known or previously proven _inequality_ (Chebychev, Hölder, Minkowski etc.)
+4. Apply basic results from real analysis/calculus, e.g., $\lim_{n\rightarrow \infty} \frac{1}{n} = 0$
+
+## Tools of the (statistician) trade
+
+Once some basic convergence results have been established, there are a number of theorems that serve as building blocks for more complex results. 
+
+1. Cramér-Wold device: a $k$ dimensional statistic converges in distribution if and only if all possible linear combinations of it converge in distribution.
+2. Continuous mapping theorem: if $g: \mathbb{R}^m \rightarrow \mathbb{R}$ is continuous and $\hat{\mu}_n \rightarrow_{p,d,as} \mu$, then $g(\hat{\mu}_n) \rightarrow_{p,d,as} g(\mu)$.
+3. Slutsky's theorem: if $A_n \rightarrow_p a$ and $B_n \rightarrow_p b$, with $a,b$ constants, and $\hat{\mu}_n \rightarrow_{d} \mu$, then $A_n\hat{\mu}_n + B_n \rightarrow_{d} a\mu + b$.
+4. The delta method: suppose $g: \mathbb{R}^m \rightarrow \mathbb{R}^k$ is differentiable with derivative $g'$, a $k \times m$ matrix and suppose 
+\[
+Z_n = a_n(\hat{\mu}_n - \mu) \rightarrow_d Z.
+\]
+Then 
+\[
+a_n(g(\hat{\mu}_n) - g(\mu)) \rightarrow_d g'(\mu) Z.
+\]
+
+... and many more results that can go a long way.
+
+## Some notes on notation
+
+We will often write $\int_\Omega \, dF_X$ to mean the integral with respect to the distribution $F_X$ and it equals $P(X \in \Omega)$ where $X$ has distribution $F_X$. 
+
+Likewise $\int f\, dF_X$ means the expectation of $f(X)$ or $E[f(X)]$ where $X \sim F_X$. 
+
+When applied to the empirical measure $\mathbb{F}_n$ for a sample $X_1, \ldots, X_n$ from $F_X$, then $\int f \, d\mathbb{F}_n = \frac{1}{n}\sum_{i = 1}^nf(X_i)$.
+
+$F(x-)$ denotes the left-hand limit $\lim_{t \uparrow x} F(t)$, and $F(x+)$ the right-hand limit. 
+
+$dF(t)$ denotes the increment $F((t + dt)-) - F(t-)$ for a small time interval $dt$, and $\Delta F(t)$ the jump process $F(t) - F(t-)$. 
+
+
+# The process point of view
+
+## What is a process?
+
+A stochastic _process_ is a collection of random variables with an _index_. 
+
+An _empirical process_ is a process computed from data. 
+
+Example, consider our random sample $X_1, \ldots, X_n$ from distribution $F$. The empirical cdf is \[
+\mathbb{F}_n(t) = \frac{1}{n}\sum_{i = 1}^n I\{X_i \leq t\}. 
+\]
+This is a _random function_ or _sample path_. We can view it as the collection of random variables $\{\mathbb{F}_n(t): t \in \mathbb{R}\}$. 
+
+Our statistic $T(X_1, \ldots, X_n)$ is now is a mapping from $\mathbb{R}^n$ to the _space of bounded increasing functions_.
+
+## Analysis
+
+How can we analyze the behavior of $\mathbb{F}_n(t)$? 
+
+For each fixed $t \in \mathbb{R}$ the laws of large numbers tells us that 
+
+$\mathbb{F}_n(t) \rightarrow_p F(t)$, 
+
+and the central limit theorem tells us that 
+
+$\sqrt{n}(\mathbb{F}_n(t) - F(t)) \rightarrow_d N(0, F(t)(1 - F(t)))$.
+
+For $T_k = \{t_1, \ldots t_k\}$ a finite collection of $t$s the random vector of ecdfs evaluated at $T_k$ converges in distribution to a mean zero Gaussian vector with covariance $F(s \wedge t) - F(s) F(t)$ for $s, t \in T_k$, where $s \wedge t = \min\{s, t\}$.
+
+Thinking about the random function, what other modes of convergence can we consider? 
+
+
+## Uniform convergence
+
+Glivenko-Cantelli in 1933, proved something like
+
+\[
+\sup_t|\mathbb{F}_n(t) - F(t)| \rightarrow_{as} 0,
+\]
+as $n \rightarrow \infty$. This is called _uniform convergence_ of the sample paths. 
+
+This is also written as 
+
+\[
+\| \mathbb{F}_n - F \|_\infty \rightarrow_{as} 0,
+\]
+and this highlights the fact that the process point of view uses different notions of distance, since we are now in a _functional space_ rather than Euclidean space. We will see later that this requires different notions of differentiability. 
+
+## Proof sketch
+
+For any $\varepsilon > 0$, there exists a partition $-\infty = t_0, t_1, \ldots, t_m = \infty$ such that $F(t_j) - F(t_{j-1}) < \varepsilon$ for all $j$. Then noting that 
+
+$\mathbb{F}_n(t) - F(t) \leq \mathbb{F}_n(t_j) - F(t_{j-1})$
+$= \mathbb{F}_n(t_j) - F(t_{j-1}) + F(t_j) - F(t_j) = \mathbb{F}_n(t_j) - F(t_{j}) + \varepsilon$.
+
+and 
+
+$\mathbb{F}_n(t) - F(t) \geq \mathbb{F}_n(t_j) - F(t_{j}) - \varepsilon$, 
+we have 
+\[
+\|\mathbb{F}_n - F \|_\infty \leq \max_{j}|\mathbb{F}_n(t_j) - F(t_j)| + \varepsilon.
+\]
+The first term converges to 0 almost surely by the strong law of large numbers, and thus for any $m$, we can find an $N$ such that for all $n \geq N$, 
+
+\[
+\sup_{m\geq n}\| \mathbb{F}_m - F \|_\infty \leq \varepsilon.
+\]
+Since $\varepsilon$ was arbitrary, the result follows. 
+
+## Some details
+
+
+```{r, echo = FALSE, fig.height = 4}
+plot(ecdf(rnorm(20)))
+curve(pnorm(x), add = TRUE)
+```
+
+- For any $\varepsilon > 0$, we can find a partition of the range such that the largest jump size is still less than $\varepsilon$. In the case of semi-continuous distributions, jumps larger than that occur with probability 0 (it must be a finite set of discontinuities)
+- Use that partition to convert the problem to the finite dimension, and use the classical results combined with some calculus.
+
+
+## Convergence in distribution
+
+Given the classical finite dimensional result, we might surmise that $\sqrt{n}(\mathbb{F}_n - F)$ converges to some sort of Gaussian process with mean 0 and covariance $F(s \wedge t) - F(t)F(s)$. 
+
+Donsker proved just that in 1952, and made more general/rigorous by Skorokod and Kolmogorov in 1956. 
+
+Specifically, $\sqrt{n}(\mathbb{F}_n - F) \Rightarrow G$ in the space of upper semi-continuous functions $D[-\infty, \infty]$ on $\mathbb{R}$ equipped with the uniform norm $\|_\infty$, where $G$ is an element of that space that satisfies $E(G(t)) = 0$ and $Cov(G(t)G(s))$ as above, for every $t, s \in \mathbb{R}$. 
+
+To be complete, we would also specify that $G$ is _tight_, meaning that for every $\varepsilon > 0$, there exists a closed and bounded set $K \subset D[-\infty, \infty]$ such that $P(G \notin K) < \varepsilon$. This is a fancy way of saying that the sample paths of $G$ do not explode to infinity, and it holds because the mean and variance functions are bounded. 
+
+
+# A closer look at processes
+
+## Gaussian processes
+
+It is useful to consider the case where $F(t) = t$, i.e., the random variables are uniform on $[0, 1]$. The Gaussian process $\{\mathbb{U}(t), t \in [0, 1]\}$ with mean function $E(\mathbb{U}(t)) = 0$ and 
+\[
+Cov(\mathbb{U}(s), \mathbb{U}(t)) = s \wedge t - st
+\]
+is called a _Brownian bridge_. 
+
+```{r}
+library(mvtnorm)
+
+UUU <- function(tt, n) {
+    
+    rmvnorm(n, mean = rep(0, length(tt)), 
+            sigma = outer(tt, tt, function(s, t) pmin(s, t) - s * t))
+    
+}
+
+tin <- seq(0, 1, length.out = 200)
+plot(UUU(tin, 1)[1,] ~ tin, type = "l", ylim = c(-2, 2))
+```
+
+## Brownian motion
+
+If a Gaussian process $\mathbb{S}$ has mean 0 and covariance function 
+\[
+Cov(\mathbb{S}(s), \mathbb{S}(t)) = s \wedge t
+\]
+it is called a _Brownian motion_ or also a _Weiner process_.
+
+Note that if $\mathbb{U}$ is a Brownian bridge and $Z$ an independent standard normal random variable, then 
+\[
+\mathbb{U}(t) + t Z, \mbox{ for } t \in [0, 1]
+\]
+is a Brownian motion. Likewise, if $\mathbb{S}$ is a Brownian motion, then $\mathbb{S}(t) - t \mathbb{S}(1)$ is a Brownian bridge for $t \in [0, 1]$. 
+
+## Increments of a process
+
+The increment of a process $X$ is defined as $X(t + u) - X(t)$ for $u \geq 0$. We will often write $d\, X(t)$ to represent the increment $X(t + dt) - X(t)$, i.e., the thing that happens just after $t$. 
+
+### Exercises/factoids
+1. The Brownian motion has independent increments with distributions $\mathbb{S}(t + u) - \mathbb{S}(t) \sim N(0, u)$. (This is called _stationary_). 
+2. The Brownian motion can be characterized by the fact that $E(d\, \mathbb{S}(t))$ does not depend on previous values. This makes it a type of _martingale_, which we will study in more detail later.
+3. The Brownian bridge does _not_ have independent increments.
+
+
+## The Poisson process
+
+A counting process is written as $\{N(t), t \geq 0\}$, where $N(0) = 0$, and $N(t)$ counts the number of events that occur up to time $t$. 
+
+$N(t)$ is a Poisson process if it has independent increments (counts on disjoint subsets of $\mathbb{R}^+$ are independent) and the count on an interval of length $t$ is distributed Poisson with rate $\lambda t$. It has some interesting properties: 
+
+- The number of events in any finite interval is Poisson, and only depends on the length of the interval
+- The time differences between events is distributed Exponential with parameter $1/\lambda$
+- The _compensated process_ $M(t) = N(t) - t\lambda$ is a martingale since its expected next value is the current one (we will make this more rigorous later)
+
+
+# Summary
+
+
+## Why processes?
+
+- Lots of theory has been developed for stochastic processes in general. 
+- Statistical methods for survival analysis can be analyzed in a unified manner using this general theory. 
+- That is the focus of this course. 
+
+### Homework and reading
+
+The exercises should be a review of things you've seen before. If you struggle with the terminology or notation, consider brushing up on basic asymptotic statistics (ask me for recommendations). 
+
+Reading for Friday: ABG Chapter 1. 
+
+
+
+
+

@@ -1,0 +1,38 @@
+---
+title: B5440 -- Exercise 5
+output: pdf_document
+fontsize: 12pt
+---
+
+# Exercises
+
+## Adjustment and collapsibility
+
+1. Let $X$ be binary taking values 0 or 1, and $Z$ be an independent, continuous random variable. 
+a. Suppose the true model for the hazard is additive: 
+\[
+\alpha(t | X, Z) = \beta_0(t) + X \beta_1(t) + Z \beta_2(t)
+\]
+but we fit the model
+\[
+\alpha(t | X) = \eta_0(t) + X \eta_1(t).
+\]
+Derive an expression for $\eta_1(t)$ in terms of the $\beta$ and the distribution of $Z$. 
+
+b. Suppose instead that the true model is multiplicative
+\[
+\alpha(t | X, Z) = \alpha_0(t)\exp(X \gamma_1 + Z \gamma_2), 
+\]
+but again we fit the model omitting the covariate $Z$: 
+\[
+\alpha(t | X, Z) = \alpha_0(t)\exp(X \theta_1). 
+\]
+Derive the relationship between $\theta_1$ and the other parameters and the distribution of $Z$. 
+
+c. For a fixed $t$, suppose the model for the cumulative incidence is
+\[
+g(P(T < t | X, Z)) = \beta_0 + \beta_1 X + \beta_2 Z
+\]
+for some link function $g$. What can you say about the problem of omitting the variable $Z$ for different choices of the link function (e.g., identity, log, logit)? 
+
+

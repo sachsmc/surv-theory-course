@@ -1,0 +1,271 @@
+---
+title: Survival Theory Course
+subtitle: Asymptotic analysis not using counting processes
+author: Michael Sachs
+output: slidy_presentation
+---
+
+
+# The process point of view revisited
+
+## What is a process?
+
+A stochastic _process_ is a collection of random variables with an _index_. 
+
+An _empirical process_ is a process computed from data. 
+
+Example, consider our random sample $X_1, \ldots, X_n$ from distribution $F$. The empirical cdf is \[
+\mathbb{F}_n(t) = \frac{1}{n}\sum_{i = 1}^n I\{X_i \leq t\}. 
+\]
+This is a _random function_ or _sample path_. We can view it as the collection of random variables $\{\mathbb{F}_n(t): t \in \mathbb{R}\}$. 
+
+Our statistic $T(X_1, \ldots, X_n)$ is now is a mapping from $\mathbb{R}^n$ to the _space of bounded increasing functions_.
+
+## Analysis
+
+How can we analyze the behavior of $\mathbb{F}_n(t)$? 
+
+For each fixed $t \in \mathbb{R}$ the laws of large numbers tells us that 
+
+$\mathbb{F}_n(t) \rightarrow_p F(t)$, 
+
+and the central limit theorem tells us that 
+
+$\sqrt{n}(\mathbb{F}_n(t) - F(t)) \rightarrow_d N(0, F(t)(1 - F(t)))$.
+
+For $T_k = \{t_1, \ldots t_k\}$ a finite collection of $t$s the random vector of ecdfs evaluated at $T_k$ converges in distribution to a mean zero Gaussian vector with covariance $F(s \wedge t) - F(s) F(t)$ for $s, t \in T_k$, where $s \wedge t = \min\{s, t\}$.
+
+Thinking about the random function, what other modes of convergence can we consider? 
+
+
+## Uniform convergence
+
+Glivenko-Cantelli in 1933, proved something like
+
+\[
+\sup_t|\mathbb{F}_n(t) - F(t)| \rightarrow_{as} 0,
+\]
+as $n \rightarrow \infty$. This is called _uniform convergence_ of the sample paths. 
+
+This is also written as 
+
+\[
+\| \mathbb{F}_n - F \|_\infty \rightarrow_{as} 0,
+\]
+and this highlights the fact that the process point of view uses different notions of distance, since we are now in a _functional space_ rather than Euclidean space. We will see later that this requires different notions of differentiability. 
+
+## Proof sketch
+
+For any $\varepsilon > 0$, there exists a partition $-\infty = t_0, t_1, \ldots, t_m = \infty$ such that $F(t_j) - F(t_{j-1}) < \varepsilon$ for all $j$. Then noting that 
+
+$\mathbb{F}_n(t) - F(t) \leq \mathbb{F}_n(t_j) - F(t_{j-1})$
+$= \mathbb{F}_n(t_j) - F(t_{j-1}) + F(t_j) - F(t_j) = \mathbb{F}_n(t_j) - F(t_{j}) + \varepsilon$.
+
+and 
+
+$\mathbb{F}_n(t) - F(t) \geq \mathbb{F}_n(t_j) - F(t_{j}) - \varepsilon$, 
+we have 
+\[
+\|\mathbb{F}_n - F \|_\infty \leq \max_{j}|\mathbb{F}_n(t_j) - F(t_j)| + \varepsilon.
+\]
+The first term converges to 0 almost surely by the strong law of large numbers, and thus for any $m$, we can find an $N$ such that for all $n \geq N$, 
+
+\[
+\sup_{m\geq n}\| \mathbb{F}_m - F \|_\infty \leq \varepsilon.
+\]
+Since $\varepsilon$ was arbitrary, the result follows. 
+
+## Some details
+
+
+```{r, echo = FALSE, fig.height = 4}
+plot(ecdf(rnorm(20)))
+curve(pnorm(x), add = TRUE)
+```
+
+- For any $\varepsilon > 0$, we can find a partition of the range such that the largest jump size is still less than $\varepsilon$. In the case of semi-continuous distributions, jumps larger than that occur with probability 0 (it must be a finite set of discontinuities)
+- Use that partition to convert the problem to the finite dimension, and use the classical results combined with some calculus.
+
+
+## Convergence in distribution
+
+Given the classical finite dimensional result, we might surmise that $\sqrt{n}(\mathbb{F}_n - F)$ converges to some sort of Gaussian process with mean 0 and covariance $F(s \wedge t) - F(t)F(s)$. 
+
+Donsker proved just that in 1952, and made more general/rigorous by Skorokod and Kolmogorov in 1956. 
+
+Specifically, $\sqrt{n}(\mathbb{F}_n - F) \Rightarrow G$ in the space of upper semi-continuous functions $D[-\infty, \infty]$ on $\mathbb{R}$ equipped with the uniform norm $\|_\infty$, where $G$ is an element of that space that satisfies $E(G(t)) = 0$ and $Cov(G(t)G(s))$ as above, for every $t, s \in \mathbb{R}$. 
+
+To be complete, we would also specify that $G$ is _tight_, meaning that for every $\varepsilon > 0$, there exists a closed and bounded set $K \subset D[-\infty, \infty]$ such that $P(G \notin K) < \varepsilon$. This is a fancy way of saying that the sample paths of $G$ do not explode to infinity, and it holds because the mean and variance functions are bounded. 
+
+
+## The Portmanteau lemma
+
+This theorem establishes some intuition about convergence in distribution of random functions.
+
+_The following are equivalent_: 
+
+1. $X_n \Rightarrow X$. 
+2. $P(X_n < x) \rightarrow P(X < x)$ for all continuity points of $x \mapsto P(X < x)$
+3. $E(f(X_n)) \rightarrow E(f(X))$ for all bounded continuous functions $f$
+
+This automatically establishes a sort of continuous mapping theorem. The key difference here is that the functions $f$ map from the space of functions equipped with $\|_\infty$ to some other space (usually $\mathbb{R}$), this opens up a lot of possibilities!
+
+Exercise: consider the function $g(F) = \sup_{t \in \mathbb{R}} |F(t)|$. Is it continuous? How would you use this plus the continuous mapping theorem to construct confidence bands for the empirical CDF? 
+
+## General empirical measures
+
+Donsker actually proved these things in much more generality. Consider the empirical distribution function: 
+\[
+\frac{1}{n}\sum_{i = 1}^n I\{X_i \leq t\}, 
+\]
+which we viewed as a process with index defined by $t$. Instead, view the indicator function itself as an instance of the index, i.e., the general empirical process is
+\[
+\mathbb{P}_n f = \frac{1}{n}\sum_{i = 1}^n f(X_i), 
+\]
+for an arbitrary function $f$ from the sample space to $\mathbb{R}$. Then 
+\[
+\{\mathbb{P}_n f, f \in \mathcal{F} \}
+\]
+is a process indexed by $f$ for some class of functions $\mathcal{F}$. Studying the behavior of classes of functions leads to results about the asymptotic behavior of the processes. For example $\mathcal{F} = \{f(x) = I(x \leq t), t \in \mathbb{R}\}$. 
+
+## The functional delta method
+
+We have now established $\sqrt{n}(\mathbb{F}_n - F) \Rightarrow G$ in the space $D[-\infty, \infty]$. There are many statistics that can be written in terms of "functionals" $\phi: D[-\infty, \infty] \rightarrow \mathbb{R}$. For example, 
+
+- The mean: $\phi(F) = \int x \, dF$
+- Quantiles: $\phi(F) = F^{-1}(p)$ such that $F F^{-1}(p) = p$
+- Wilcoxon statistic (two-sample): $\phi(F, G) = \int F\, dG$
+- Z-estimators: $\phi$ is the mapping from the cdf to a zero of an estimating function
+- M-estimators: mapping to the maximum of a function
+- ...
+
+To analyze the asymptotic behavior of such statistics, we might think that there is some version of the delta method that tells us
+\[
+\sqrt{n}(\phi(\mathbb{F}_n) - \phi(F)) \Rightarrow \phi'(G),
+\]
+where $\phi'$ is a derivative, in some sense. 
+
+## Notions of differentiability
+
+We are not going to cover the technical details, but remember that we are operating in the space $D[-\infty, \infty]$ equipped with the supremum norm. Compared to standard Euclidean space, where derivatives are in terms of 
+\[
+\frac{f(x + dx) - f(x)}{dx}, 
+\]
+this opens up a lot of possibilities regarding the direction of approaching the function. $dx$ in the above now needs to be a small change in a function.
+
+1. Gateaux -- Look at all fixed functions $h$: $lim_{t \rightarrow 0} \phi(F + t h) - \phi(F)$
+2. Hadamard -- Look at sequences of functions $h_t$ as $h_t \rightarrow h$
+3. Fréchet -- Look at $\phi(F + h)$ as $\|h\| \rightarrow 0$. 
+
+Hadamard is the sweet spot, and we have the functional delta method: 
+\[
+\sqrt{n}(\phi(\mathbb{F}_n) - \phi(F)) \Rightarrow \phi'(G), 
+\]
+where $\phi'$ is the Hadamard derivative of $\phi$.
+
+## Taylor expansion
+
+Specifically, 
+
+\[
+\phi(\mathbb{F}_n) - \phi(F) = \frac{1}{\sqrt{n}}\phi'(\mathbb{F}_n - F) + o(\frac{1}{\sqrt{n}}) = 
+\]
+\[
+\frac{1}{n}\sum_{i= 1}^n\phi'(\delta_{X_i} - F) + o(\frac{1}{\sqrt{n}}), 
+\]
+where $\delta_i$ is the discrete distribution with point mass at $X_i$. $x \mapsto \phi'(\delta_x - F)$ is the _influence function_ of $\phi$. This is the thing you want to calculate to derive asymptotic distributions: 
+
+\[
+\phi'(\delta_x - F) = \left. \frac{d}{dt} \phi((1 - t) F + t \delta_x) \right|_{t=0}.
+\]
+
+## Some basic derivatives
+
+- Integral: for $\phi(F) = \int s \, dF(s)$, $\phi'(\delta_x - F) = x - \int s \, dF(s)$
+- Inverse: for $\phi(F) = F^{-1}(p)$, 
+$$
+\phi'(\delta_x - F) = \frac{-I(F^{-1}(p) \geq x) - p}{f(F^{-1}(p))}.
+$$
+- Composition/chain rule: if $\phi$ and $\psi$ are Hadamard differentiable, then so is $\psi \circ \phi$ and it has derivative $\psi' \circ \phi'$. 
+
+## Applications
+
+The previous results can be used to derive the asymptotic distributions of these statistics. 
+
+- ROC curve (Hsieh and Turnbull 1996)
+- Predictiveness curve (Sachs and Zhou 2013)
+- Nelson-Aalen estimator (Gill 1989, Example 3)
+- Kaplan-Meier estimator (Breslow and Crowley 1974)
+
+
+## Nelson-Aalen estimator
+
+From Van der Vaart (1998), Example 20.15: 
+
+We wish to estimate the cumulative hazard function $A$ of a random sample of failure times $T_1, \ldots, T_n$ from distribution $F$. But, we only observe $(X_i, \Delta_i)$ where $X_i = T_i \wedge C_i$, and $\Delta_i = I(T_i \leq C_i)$. Assume that $C_1, \ldots, C_n$ are a random sample from distribution $G$. 
+
+Note that $P(X_i > x) = (1 - F(x))(1 - G(x)) = 1 - H(x)$ and $P(X_i \leq x, \Delta_i = 1) = (1 - G(x-))\,dF(x) = H_1(x)$. We can write 
+
+\[
+A(t) = \int_0^t \frac{1}{1 - F(s-)}\, dF(s) = \int_0^t \frac{1}{1 - H(s-)}\, dH_1(s).
+\]
+Further, we can estimate $H$ and $H_1$ by their empirical counterparts: $\hat{H}(x) = n^{-1}\sum_{i = 1}^nI(X_i \leq x)$ and $\hat{H}_{1}(x) = n^{-1}\sum_{i = 1}^n I(X_i \leq x, \Delta_i = 1)$. Plugging these into the above yields the Nelson-Aalen estimator
+\[
+\hat{A}(t) = \int_0^t \frac{1}{1 - \hat{H}(s-)}\, d\hat{H}_1(s).
+\]
+
+## Asymptotic properties
+
+
+Because they are empirical cdfs, the pair $(\hat{H}, \hat{H}_1)$ converges to a bivariate Gaussian process in the space $D\times D$. 
+
+The Nelson-Aalen estimator can be viewed as a series of maps:
+\[
+(A, B) \mapsto (1 - A, B) \mapsto (\frac{1}{1 - A}, B) \mapsto \int_0^t\frac{1}{1 - A_-}\, dB. 
+\]
+
+Each of these are Hadamard differentiable and hence so is their composition, as long as $H(t) < 1$. 
+
+It follows that the Nelson-Aalen estimator converges to a Gaussian process in $D[0, \tau]$ for every $\tau$ such that $H(\tau) < 1$. 
+
+
+## Kaplan-Meier
+
+In ABGK, they note that the product integral is Hadamard differentiable (as a mapping from $D[0,t]$ to itself, i.e., a function of $A$) and with
+\[
+S(t) = \prod_u^t\{1 - dA(u)\}
+\]
+the derivative is (for $h \in D[0, t]$)
+\[
+(dS(A)\cdot h)(s) = -\int_0^sS(u-)\frac{S(s)}{S(u)}\, dh(u) = -S(s)h(s).
+\]
+Hence plugging in $\hat{A}$ for $h$ in the above, we have another proof that 
+\[
+\sqrt{n}(\hat{S}(\cdot) - S(\cdot)) \Rightarrow -S(\cdot) W(\sigma(\cdot)), 
+\]
+this time using the functional delta method. 
+
+## The Breslow and Crowley approach
+
+From the life-table approach, we partition the range $[0, t]$ into a series of $K$ intervals with $\xi_0 < \xi_1 < \cdots < \xi_K < t$. For each interval, we can compute the conditional probability of death within that interval given survival up to the start of the interval as
+\[
+q_k = (F(\xi_k) - F(\xi_{k - 1})) / (1 - F(\xi_{k - 1})). 
+\]
+The unconditional survival beyond $\xi_k$ is computed as $P_k = (1 - q_1)\cdots(1 - q_k)$. 
+
+The vector $\hat{q} = (\hat{q}_1, \ldots, \hat{q}_K)$, with the proportions estimated in the obvious way, is asymptotically multivariate normal. 
+
+The vector of survival probabilities $(P_1, \ldots, P_K)$ is a smooth mapping of the conditional probabilities hence we can apply the delta method. 
+
+Breslow and Crowley then take the limit as $K \rightarrow \infty$ in order to derive the limiting process of the Kaplan-Meier estimator (similar to the proof of the Glivenko-Cantelli theorem).
+
+Gill and others viewed this approach as overly technical and inelegant, so they went on to develop the approach using counting processes and martingales. 
+
+
+## Summary
+
+- In the process point of view, we still have some standard results like the delta method, continuous mapping theorem, etc. 
+- Complications arise due to the functional space compared to the Euclidean space. 
+- Nevertheless, these tools exist and can be applied in different scenarios
+- Remember it is not one or the other, both approaches have their merits and complementary uses.
+

@@ -1,0 +1,175 @@
+---
+title: Survival Theory Course 
+subtitle: Likelihoods and Censoring
+author: Michael Sachs
+output: slidy_presentation
+---
+
+
+## Outline
+
+1. Types of censoring
+2. Goals of inference
+3. Assumptions
+
+## Right censoring
+
+Let $T_1, \ldots, T_n$ be potential lifetimes and for each $i$ we observe either $T_i$ or $C_i < T_i$, where $C_i$ is the censoring time. The observed data are $(\tilde{T}_i, D_i)$, where $D_i = 1$ if $T_i = \tilde{T}_i$ and $D_i = 0$ if $\tilde{T}_i = C_i$, in which case we know that $\tilde{T}_i < T_i$. 
+
+### Counting process formulation
+
+- $N_i(t) = I(\tilde{T}_i \leq t, D_i = 1)$, event process (right-continuous)
+- $Y_i(t) = I(\tilde{T}_i \geq t) = I(t \leq C_i) I(t \leq T_i)$, the at-risk process (left-continuous)
+- Let $\mathcal{F}_t$ be the history of the multivariate process for all individuals $\{(N_i(s), Y_i(s)): s \leq t, i = 1, \ldots, n\}$
+
+## Type I and II right censoring
+
+**Type I**: for a prespecified $c_i$, $T_i$ is observed only if $T_i < c_i$, for $i = 1, \ldots, n$. 
+
+**Type II**: Observation continues until time $T$ at which $k$ events have occurred. Then $C_i = T$ for all $i$.  
+
+**Random censoring**: Censoring at random times $C_i$ that are independent of $T_i$. 
+
+## Left truncation/delayed entry
+
+Often in epidemiology it is of interest to study mortality as a function of time since onset of some disease. For example, in a register that started data collection on particular date $V$, we want to study mortality among people with diabetes. The relevant distribution to study is $T_i | T_i > V$. The entry time could also depend on $i$, e.g., if the time scale is age. 
+
+In this case the at risk process is: $Y_i(t) = I\{V_i < t \leq \tilde{T}_i\}$ and the counting process is 
+\[
+N(t) - N(t \wedge V_i)
+\]
+
+## Left censoring
+
+Left-censoring is unusual in epi, but here is an example from ABGK: 
+
+Troops of baboons sleep in trees in the Amboseli Reserve Kenya, and descend during the day to forage. It is of interest to study the time to descent from the trees and observers arrive at some time $V_i$ during the day. If, when they arrive they observe a baboon on the ground they can only ascertain that the descent took place before $V_i$. 
+
+Exercise: write down the at risk process and the counting process in this example.
+
+
+## Interval censoring 
+
+Is a combination of left and right censoring. It corresponds to observing $N_i$ on a set of the form $E_i = (V_i, U_i]$, or more generally, to a set 
+\[
+E_i = \cup_{j = 1}^r (V_{ji}, U_{ji}]
+\]
+where $0 \leq V_{1i} \leq U_{1i} \leq \cdots V_{ri} \leq U_{ri} \leq t$.
+
+This often happens if the event of interest depends on obtaining some measurement, e.g., time to diabetic nephropathy, which requires a measurement of kidney function.
+
+
+# Goals of inference 
+
+## Three models and histories
+
+ABG Figure 2.1 shows the three hypothetical models: 
+
+1. Complete observation of all event times $N^C(t)$, which generates the history $\mathcal{F}^C_t$. This is our target of inference. 
+2. A joint model based on complete observation of $N^C(t)$ _as well as_ the censoring process (whatever it is), which generates the history $\mathcal{G}_t$. This is completely hypothetical.
+3. The observed process $N(t)$ which generates the history $\mathcal{F}_t$
+
+Under what conditions can we make valid inference about $N^C(t)$ based on $\mathcal{F}_t$?
+
+Answers to this question lead to different definitions and notions of _independent censoring_ and a related topic is _noninformative censoring_. 
+
+
+## Intensities
+
+
+It suffices to study the intensities of the counting process. We define a general censoring process $C_i(t) = I(t \in E_i)$ for arbitrary subintervals $E_i$. The _censored_ or _filtered_ counting process is 
+\[
+N_i(t) = \int_0^t C_i(u) \, dN_i^C(u).
+\]
+
+Consider a counting process $N^C(t)$ adapted to two filtrations $\mathcal{F}^C_t \subseteq \mathcal{G}_t$ for all $t$, i.e., the filtrations are nested. Suppose $N^C(t)$ has intensity $\lambda(t)$ with respect to $\mathcal{G}_t$. The intensity with respect to $\mathcal{F}^C_t$ will generally differ, but the _innovation theorem_ says 
+\[
+\tilde{\lambda}(t) = E(\lambda(t) | \mathcal{F}^C_{t-})
+\]
+is the $\mathcal{F}^C_t$ intensity of $N(t)$. If $N$ is adapted to $\mathcal{F}^C$ and $\lambda(t)$ is predictable with respect to $\mathcal{F}^C_t$ then $\tilde{\lambda}(t) = \lambda(t)$. 
+
+**What does this have to do with censoring?**
+
+Consider the joint model with history $\mathcal{G}_t$ containing information about the processes $N^C$ and $C$. The innovation theorem tells us when 
+\[
+\lambda^\mathcal{G}(t) = \lambda^{\mathcal{F}^C}(t), 
+\]
+which is called _independent censoring_.
+
+
+## Independent censoring
+
+\[
+\lambda^\mathcal{G}(t) = \lambda^{\mathcal{F}^C}(t), 
+\]
+if $N$ is adapted to $\mathcal{F}^C$ and $\lambda(t)$ is predictable with respect to $\mathcal{F}^C_t$.
+
+ABG assume the above equation, but it is also possible to frame it in other ways or to use the innovation theorem condition directly on a case-by-case basis.
+
+### Example, simple type I censoring
+
+Suppose there is a fixed constant $d$, such that $T_i$ is observed only if $T_i < d$, for $i = 1, \ldots, n$.
+
+- What is $\mathcal{G}$, the joint history?
+- Why is $N$ adapted and $\lambda$ predictable wrt $\mathcal{F}^C_t$?
+
+## Connecting back to the observed history
+
+In the simple type I censoring example, the observed counting process is $N^d = \int I_{[0,d]}\, dN$, counting events up to and including time $d$. Because $d$ is a stopping time, $N^d$ has cumulative intensity process $\int I_{[0,d]}\, d\Lambda$ with respect to $\mathcal{F}^C_t$ where $\Lambda$ is the cumulative intensity of $N$. 
+Now considering the reduced/observed history $\mathcal{F}_{t \wedge d}$, note that $N^d$ is adapted to this filtration, and hence the cumulative intensity is the same. 
+
+In general, the independent censoring assumption preserves the form of the intensity process comparing the observed history to the complete history. See page 60 of ABG. 
+
+
+## Wrap up on independent censoring
+
+Moving forward, we will assume that 
+
+\[
+\lambda_i^{\mathcal{G}}(t) = \lambda_i^{\mathcal{F}^C}(t), 
+\]
+regardless of the form of the joint filtration $\mathcal{G}$. I.e, it applies for right, interval, left censoring, and left truncation. 
+
+
+## (Non)Informative censoring
+
+You may have also heard the term noninformative censoring. For this we need to introduce the likelihood (which will come up again later).
+
+Suppose $N^C$ has cumulative intensity $\Lambda^\theta$ with respect to a probability measure $P_{\theta, \phi}$, where $\theta$ and $\phi$ may be infinite dimensional (i.e., this is not necessarily a parametric model). $\theta$ is of primary interest, and $\phi$ the nuisance parameter. The $\mathcal{F}^C_t$ likelihood may be factored (under independent censoring) 
+\[
+L(\theta, \phi) = L^C(\theta) L'(\theta, \phi),
+\]
+where the first term corresponds to the components relevant to the event of interest, and the second term those relevant to censoring, covariates, etc. The first term is called the partial likelihood for $\theta$. If $L'(\theta, \phi) = L'(\phi)$, then the censoring is _noninformative_, or more specifically uninformative for $\theta$. 
+
+Note that inference based on $L^C(\theta)$ alone is asymptotically valid (we shall see later), i.e., consistent and asymptotically normal, but potentially inefficient if there is informative censoring. 
+
+
+## An alternative formulation
+
+Fleming and Harrington formulate independent censoring as follows.
+
+Suppose $T$ is an absolutely continuous failure time with hazard function $\alpha(t)$, and $U$ a right censoring time. Let $X = T \wedge U$, $\delta = I(T \leq U)$ and define $N(t) = I(X \leq t, \delta = 1)$. Then 
+\[
+M(t) = N(t) - \int_0^t I(X \geq u) \alpha(u) \, du
+\]
+is a martingale if and only if $\alpha(t) = \alpha^*(t)$, where 
+\[
+\alpha^*(t) = \lim_{h \rightarrow 0} \frac{1}{h}P(t \leq T < t + h | T \geq t, U \geq t).
+\]
+
+## Extensions and covariates
+
+- This is often _not_ how assumptions about censoring are communicated in methods papers, often it is 
+\[
+(T, \delta) \perp C
+\]
+- With covariates $Z$, it can be stated as 
+\[
+(T, \delta) \perp C | Z
+\]
+
+How would you incorporate covariates in our formulations here? 
+
+- When is dependent censoring a problem? 
+- Well in many cases, the martingale results still hold, so theoretically we never have to worry about it. 
+- _But_, the martingale results hold for the wrong compensator, i.e., you are making valid inference on something you don't actually care about (the intensity of the observed time). 

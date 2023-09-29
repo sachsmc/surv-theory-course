@@ -1,0 +1,30 @@
+---
+title: B5440 -- Exercise 4
+output: pdf_document
+fontsize: 12pt
+---
+
+# Exercises
+
+1. Let $N(t)$ be a counting process that satifies the multiplicative intensity model $\lambda(t) = \alpha(t) Y(t)$ and consider the null hypothesis
+\[
+H_0: \alpha(t) = \alpha_0(t), t \in [0, t_0]
+\]
+where $\alpha_0$ is a known/fixed function. 
+
+a. Let $J(t) = I(Y(t) > 0)$ and $\hat{A}(t) = \int_0^tJ(s)/Y(s) \, dN(s)$ and introduce $A^*_0(t) = \int_0^tJ(s)\alpha_0(s)\, ds$. Show that $\hat{A} - A_0^*$ is a mean zero martingale under the null. 
+b. Find an expression for the predictable variation process of $\hat{A} - A^*_0$ under the null. 
+c. Consider the test statistic
+\[
+Z(t_0) = \int_0^{t_0}Y(t)\{d\hat{A}(t) - dA^*_0(t) \}.
+\]
+Show that $Z(t_0)$ is a mean zero martingale under the null and find the predictable variation process $\langle Z\rangle(t_0)$. 
+
+
+2. Assume that the counting processes $N_i(t), i = 1, \ldots, n$ have intensity processes of the form $\lambda_i(t) = Y_i(t) \alpha_0(t) \exp(\beta x_i)$ where the $Y_i(t)$ are the at risk indicators and $x_i$ are binary taking values 0 or 1. The score test statistic is $U(\beta_0)^\top \mathcal{I}(\beta_0)^{-1} U(\beta_0)$, where $U(\beta)$ are the score equations and $\mathcal{I}(\beta)$ is the expected information: $\int_0^t V(\beta, u) \, dN_\bullet(u) = \sum_{T_j} V(\beta, T_j)$, with $U$ and $V$ defined as in the notes. Show that the score test for the null hypothesis $\beta = 0$ is the log-rank test. 
+
+# Reading
+
+ABG Chapter 4, sections 4.1. 
+
+Cox (1972), and the ensuing discussion (on canvas). 

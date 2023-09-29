@@ -1,0 +1,111 @@
+---
+title: B5440 -- Exercise 1, Review and self-assessment
+output: pdf_document
+fontsize: 12pt
+---
+
+# Exercises
+
+1. Suppose $X, X_1, \ldots, X_n$ are independent and identically distributed with mean 0 and finite variance but *not* normal. The t-statistic to test the null hypothesis that $E(X) = 0$ is
+\[
+\frac{\overline{X}_n}{S_n/\sqrt{n}},
+\]
+where $\overline{X}_n$ is the sample mean and $S_n$ is the sample standard deviation. Show that the t-statistic converges in distribution to a standard normal and note which named theorems you are using. 
+
+**Solution**: 
+
+First write
+\[
+\frac{\overline{X}_n}{S_n/\sqrt{n}} = \sqrt{n}(\overline{X}_n / S_n - 0).
+\]
+Then note that 
+\[
+\sqrt{n}(\overline{X}_n - 0) \rightarrow_d N(0, \sigma^2)
+\]
+by the Central Limit Theorem, where $\sigma^2 = Var(X)$. Then
+\[
+S^2_n = \frac{n}{n - 1}\left(\frac{1}{n}\sum_{i = 1}^nX_i^2 - \overline{X}_n^2\right) \rightarrow_p 1(E(X^2) - (E(X))^2) = \sigma^2
+\]
+by two applications of the weak law of large numbers and the continuous mapping theorem. By the continuous mapping theorem again, $S_n \rightarrow_p \sigma$. Finally by Slutsky's theorem
+\[
+\frac{\overline{X}_n}{S_n/\sqrt{n}} \rightarrow_d N(0, \sigma^2) / \sigma =_d N(0, 1).
+\]
+
+2. Suppose $X \sim \mbox{exponential}(\theta)$ and $Y \sim \mbox{exponential}(\eta)$ with densities $f_\theta(x) = \theta e^{-\theta x}$, $f_\eta(y) = \eta e^{-\eta x}$. In the _uncensored_ case, we observe both $X$ and $Y$. In the _right censored_ case we observe $(Z, \Delta) = (\min(X, Y), 1\{X \leq Y\})$. 
+
+(a) Densities.  
+i. Find the joint density of $(X, Y)$.
+ii. Find the joint density of $(Z, \Delta)$. 
+
+(b) Scores. Find the scores for $\theta$ and $\eta$:
+i. in the uncensored case. 
+ii. in the right censored case. 
+
+(c) Information. Find the information for $\theta$: 
+i. in the uncensored case. 
+ii. in the right censored case
+
+**Solution**: 
+
+First in the uncensored case, the joint density is $f_\theta(x)f_\eta(y)$. To get the scores, we take logs and differentiate with respect to $\theta, \eta$: 
+\[
+\log f_{x,y}(x,y; \theta, \eta) = \log f_{\theta}(x) + \log f_\eta(y) = \log \theta - \theta x + \log \eta - \eta y.
+\]
+Then
+
+\begin{align*}
+\dot{l}_\theta(x,y) = \frac{\partial f_{x,y}}{\partial \theta} =  \frac{1}{\theta} - x \\
+\dot{l}_\eta(x,y) = \frac{\partial f_{x,y}}{\partial \eta} =  \frac{1}{\eta} - y.
+\end{align*}
+
+Since $X$ and $Y$ are independent, $E[(1/\theta - x)(1/\eta - y)] = 0$ and hence the information for $\theta$ is $E(\dot{l}_\theta(x,y)^2) =$ 
+\[
+\frac{1}{\theta^2} - 2\frac{E(X)}{\theta} + E(X^2) = \frac{1}{\theta^2}.
+\]
+
+Now in the censored case, the joint density of $(Z, \Delta)$ is 
+\[
+f_{Z, \Delta}(z, \delta; \theta, \eta) = \{(1 - F_\eta(z))f_\theta(z)\}^\delta \{(1 - F_\theta(z))f_\eta(z)\}^{1 - \delta}
+\]
+where $F_\eta,F_\theta$ are the cumulative distribution functions, e.g., $F_\theta(x) = 1 - e^{-\theta x}$. Then 
+\begin{align*}
+l(z, \delta) = \log f_{Z, \Delta}(z, \delta; \theta, \eta) = \delta (-\eta z + \log\theta - \theta z) + (1 - \delta)(-\theta z + \log\eta - \eta z) = \\
+\delta \log \theta - \theta z + \log \eta - \eta z - \delta\log \eta. 
+\end{align*}
+So the scores are 
+\begin{align*}
+\dot{l}_\theta(z, \delta) = \frac{\delta}{\theta} - z \\
+\dot{l}_\eta(z, \delta) = \frac{1 - \delta}{\eta} - z.
+\end{align*}
+In this case the easier way to calculate the information for $\theta$ is using the second derivatives. It is easy to see that the off-diagonals of the Hessian matrix will be zero, since $\eta$ does not appear in $\dot{l}_\theta$ and vice-versa. Hence the information for $\theta$ is
+\begin{align*}
+-E\left[\frac{\partial \dot{l}_\theta(Z,\Delta)}{\partial \theta}\right] = E[\Delta / \theta^2] = \\
+P(\Delta = 1)/\theta^2.
+\end{align*}
+First note that this will always be less than the information for $\theta$ in the uncensored case. We can then calculate how much by determining $P(\Delta = 1) =$
+\begin{align*}
+P(X \leq Y) = E(P(X \leq y | Y = y)) = \\
+\int_0^\infty\int_0^y \theta e^{-\theta x} \eta e^{-\eta y} \, dx dy = \\
+\int_0^\infty\eta e^{-\eta y}(1 - e^{-\theta y}) \, dy = \\
+1 - \eta \int_0^\infty e^{-(\theta + \eta) y}\, dy = \\
+1 - \frac{\eta}{\theta + \eta} = \frac{\theta}{\theta + \eta}.
+\end{align*}
+
+
+
+3. If $X \geq 0$ and has distribution function $F$, show that 
+\[
+E(X) = \int_0^\infty (1 - F(x)) \, dx. 
+\]
+
+**Solution**: 
+
+\begin{align*}
+\int_0^\infty (1 - F(x)) \, dx &= \int_0^\infty \int_x^\infty \, dF(u) \, dx = \\
+\int_0^\infty \int_x^\infty \, dF(u) \, dx &= \int_0^\infty \int_0^\infty 1[u > x]\, dF(u) \, dx = \\
+\int_0^\infty \int_0^\infty 1[u > x]\, dx \, dF(u) &= \int_0^\infty u \, dF(u) = E(X), 
+\end{align*}
+
+using Fubini's theorem in the third line. 
+
+

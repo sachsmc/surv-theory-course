@@ -1,0 +1,29 @@
+---
+title: B5440 -- Exercise 2, Processes and Martingales
+output: pdf_document
+fontsize: 12pt
+---
+
+# Exercises
+
+1. Answer and prove the following: 
+
+a. Let $X_1, X_2, \ldots$ be independent with mean 0. Is $M_n = X_1 + \cdots + X_n$ a martingale? 
+b. Let $X_1, X_2, \ldots$ be independent with mean $\mu$. Is $S_n = X_1 + \cdots + X_n$ a martingale? 
+c. Let $X_1, X_2, \ldots$ be independent with mean 1. Is $M_n = X_1 \cdot X_2 \cdots X_n$ a martingale? 
+
+
+2. Show that if $M$ is a martingale then so is the stopped process $M^T$. 
+
+
+3. Poisson process compensator:
+
+Let $N(t)$ be the number of events in $[0,t]$ where $N(t) - N(s) \sim \mbox{Poisson}((t - s)\lambda)$ for $s < t$ and $N$ has independent increments. 
+
+Does the Doob-Meyer decomposition apply to $N(t)$? If so, identify the compensator of $N(t)$. Also find the predictable variation process. 
+
+
+
+# Reading
+
+ABG Chapter 2. 

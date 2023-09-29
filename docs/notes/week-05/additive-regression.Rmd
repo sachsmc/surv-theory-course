@@ -1,0 +1,269 @@
+---
+title: Survival Theory Course 
+subtitle: Additive Regression Models
+author: Michael Sachs
+output: slidy_presentation
+---
+
+## Outline
+
+1. Aalen's additive model
+2. Cox-Aalen, additive multiplicative model
+3. Direct binomial regression
+
+## Additive hazard regression
+
+Under the same setup as before, the additive hazard model is 
+\[
+\alpha(t | X_i) = \beta_0(t) + \beta_1(t) x_{i1}(t) + \cdots + \beta_p(t) x_{ip}(t), 
+\]
+where the $\beta_q(t)$ are regression functions and we define the cumulative regression functions
+\[
+B_q(t) = \int_0^t\beta_q(s) \, ds.
+\]
+Using the fact that $\lambda_i(t) = Y_i(t)\alpha_i(t)$ and the decomposition 
+\[
+dN_i(t) = \lambda_i(t)dt + dM_i(t),
+\]
+we now have
+\[
+dN_i(t) = Y_i(t)B_0(t) + \sum_{j=1}^pY_i(t)x_{ij}(t)dB_{j}(t) + dM_i(t).
+\]
+This resembles an ordinary linear regression model.
+
+## Estimation
+
+Letting $\mathbf{N}(t), \mathbf{B}(t)$ and $\mathbf{M}(t)$ denote the column vectors you get by stacking the $n$ observations, and the $n \times (p+1)$ design matrix
+\[
+\mathbf{X}(t) = \left(\begin{array}{c} 
+Y_1(t) & Y_1(t) x_{11}(t) & \cdots & Y_1(t) x_{1p}(t) \\
+\vdots & & & \\
+Y_n(t) & Y_n(t) x_{n1}(t) & \cdots & Y_n(t) x_{np}(t)
+\end{array}\right).
+\]
+Then the model can be written
+\[
+d\mathbf{N}(t) = \mathbf{X}(t) \, d\mathbf{B}(t) + d\mathbf{M}(t). 
+\]
+If $\mathbf{X}(t)$ is invertable, then 
+\[
+d\hat{\mathbf{B}}(t) = (\mathbf{X}(t)^\top\mathbf{X}(t))^{-1}\mathbf{X}(t)^\top \, d\mathbf{N}(t) = \mathbf{X}^{-}(t)\, d\mathbf{N}(t)
+\]
+and if we let $J(s)$ be the indicator that $\mathbf{X}(s)$ is invertable, then the cumulative coefficient estimate is
+\[
+\hat{\mathbf{B}}(t) = \int_0^t J(u)\mathbf{X}^-(t)\, d\mathbf{N}(u). 
+\]
+
+## Analysis of $\hat{\mathbf{B}}(t)$
+
+Let $\mathbf{B}^*(t) = \int_0^tJ(u)\,d\mathbf{B}(u)$, then we can study the bias term
+\[
+\hat{\mathbf{B}}(t) - \mathbf{B}^*(t) = \int_0^t J(u)\mathbf{X}^-(u)\, d\mathbf{M}(u), 
+\]
+arguing as before, that asymptotically, $\mathbf{B}^*(t)$ is close enough to $\mathbf{B}(t)$. 
+
+This is a stochastic integral with respect to a vector valued martingale. All of the properties we studied for univariate martingales have vector valued versions, including a multvariate martingale central limit theorem. One key distinction is the form of the predictable and optional variation processes: 
+
+\[
+\langle \hat{\mathbf{B}} - \mathbf{B}^* \rangle (t) = \int_0^t J(u) \mathbf{X}^-(u) \mbox{diag}(\mathbf{\lambda}(u)\,du)\mathbf{X}^-(u)^\top, 
+\]
+and 
+\[
+[\hat{\mathbf{B}} - \mathbf{B}^*] (t) = \int_0^t J(u) \mathbf{X}^-(u) \mbox{diag}(d\mathbf{N}(u))\mathbf{X}^-(u)^\top, 
+\]
+where $\mathbf{\lambda}(u)$ is the vector of intensity processes, and $\mbox{diag}(v)$ is the diagonal matrix with $v$ as the diagonal. 
+
+## Asymptotics
+
+If 
+\[
+n \langle \hat{\mathbf{B}} - \mathbf{B}^* \rangle (t) \rightarrow \Sigma(t)
+\]
+then the martingale central limit theorem says that $\sqrt{n}(\hat{\mathbf{B}} - \mathbf{B}^*)$ converges to a multivariate Gaussian martingale with covariance function  $\Sigma(t)$. $\Sigma(t)$ can be estimated by
+
+\[
+\hat{\Sigma}(t) = [\hat{\mathbf{B}} - \mathbf{B}^*] (t) = \sum_{T_j \leq t}J(T_j) \mathbf{X}^-(T_j) \mbox{diag}(\Delta \mathbf{N}(T_j))\mathbf{X}^-(T_j)^\top, 
+\]
+or, plugging in the estimates to the expression for the intensity function
+\[
+\tilde{\Sigma}(t) = \widehat{\langle \hat{\mathbf{B}} - \mathbf{B}^*\rangle (t)} = \sum_{T_j \leq t}J(T_j) \mathbf{X}^-(T_j) \mbox{diag}(\mathbf{X}(T_j)\Delta \hat{\mathbf{B}}(T_j))\mathbf{X}^-(T_j)^\top. 
+\]
+
+
+## Interpretation
+
+The cumulative regression functions are usually plotted for each covariate, along with confidence intervals
+\[
+\hat{B}_q(t) \pm z_{1 - \alpha/2}\sqrt{\Sigma_{(q,q)}(t)}.
+\]
+> One should focus on the slope of the estimated curve and judge how this changes over time. 
+
+Alternatively, one can use kernel smoothing to get a smoothed estimate of the derivative of the cumulative functions, i.e., a plot of $\hat{\beta}_q(t)$. 
+
+```{r}
+library(survival)
+par(mfrow = c(1, 3))
+plot(aareg(Surv(futime, death) ~ sex + age, data = mgus))
+```
+
+
+## Interpretation as relative survival
+
+Relative survival is interpreted in the context of an "excess hazard" model: 
+\[
+\alpha(t | X) = \alpha^*(t | X) + v(t, Z), 
+\]
+where $\alpha^*$ is called the "expected" hazard and $v$ is the excess hazard due to the presence of some disease (usually cancer). $\alpha^*$ is typically estimated using external data (e.g., life tables for a population reported by a national register).
+
+In terms of survival, we have
+\[
+S(t | X) = \exp(-\alpha(t|X)) = S^*(t | X) \exp(-v(t, Z)).
+\]
+
+In an Aalen model, if the $j$th variable is dichotomous then 
+\[
+\exp(-\hat{B}_j(t))
+\]
+can be interpreted as the adjusted relative survival function of covariate $j$ "comparing the survival of individuals that are similar except for differences in one covariate".
+
+
+## Testing cumulative coefficients
+
+We may want to test the null hypothesis: 
+\[
+H_0: B_q(t) = 0, \mbox{ all } t \in [0, t_0].
+\]
+Under the null, the test statistic
+\[
+Z_q(t_0) = \int_0^{t_0}L_q(t) \, d\hat{B}_q(t) = \sum_{T_j \leq t_0} L_q(T_j)\Delta \hat{B}_q(T_j)
+\]
+is a stochastic integral for a predictable $L_q(t)$ which is a weight process that equals 0 whenever $J(t) = 0$. Hence the predictable variation
+\[
+\langle Z_q \rangle(t_0) = \int_0^{t_0}L^2_q(t) \, d\langle \hat{B}_q \rangle(t).
+\]
+Replacing $\langle \hat{B}_q \rangle(t)$ with the estimated version, we can standardize the test statistic and compare it to a standard normal. 
+
+The weight process $L$ can be based on the diagonal of the matrix
+\[
+K(t) = \left\{\mbox{diag}((X(t)^\top X(t))^{-1})\right\}^{-1}.
+\]
+
+
+## Additive multiplicative model
+
+We have the Cox model, 
+\[
+\lambda_i(t) = Y_i(t)\lambda_0(t) \exp(X_i(t)^\top\beta(t))
+\]
+and the Aalen additive model
+\[
+\lambda_i(t) = Y_i(t)X_i^\top(t)\beta(t). 
+\]
+Various attempts have been made to combine the two. Scheike and Zhang (2002) summarize those attempts and propose a new one
+\[
+\lambda_i(t) = Y_i(t) X_i^\top(t)\alpha(t)\exp(Z_i(t)^\top\beta(t)),
+\]
+where the covariates of interest are in $X_i$, while the $Z_i$ are more flexibly modeled. 
+
+## Estimation of the additive-multiplicative model
+
+They derive the likelihood: 
+\[
+\prod_i \prod_{t \leq \tau} (Y_i(t)(X_i^\top(t)\,dA(t))\exp(Z_i(t)^\top\beta(t))^{dN_it(t)})\times
+\]
+\[
+\exp\left(-\int_0^\tau Y_i(t)(X_i(t)^\top \alpha(t))\exp(Z_i(t)^\top\beta)\, ds\right)
+\]
+where $A(t) = \int_0^t \alpha(s) ds$. 
+
+It is of interest to estimate both $dA(t)$ (nonparametrically) and $\beta$. 
+
+1. They derive the scores for $dA$ first, and then argue that a similar weighted least squares estimator as in the Aalen model solves the scores. 
+2. They show that the scores for $\beta$ have mean zero at the true value of $\beta$ no matter what the weight matrix is in step 1. 
+3. They then derive the efficient weight matrix and information.
+4. Asymptotic properties follow under the usual assumptions. 
+
+
+## Example
+
+Using the `timereg` package
+
+```{r}
+library(timereg)
+data(sTRACE)
+
+# Fits stratified Cox model 
+out<-cox.aalen(Surv(time,status==9)~-1+factor(vf)+ prop(age)+prop(sex)+
+	       prop(chf)+prop(diabetes),data=sTRACE,max.time=7,n.sim=100)
+summary(out)
+par(mfrow=c(1,2)) 
+plot(out, col = c("black", "grey65"))
+
+
+## Cox-Aalen model
+out<-cox.aalen(Surv(time,status==9)~prop(age)+prop(sex)+
+               vf+chf+prop(diabetes),data=sTRACE,max.time=7,n.sim=100)
+summary(out)
+par(mfrow=c(1,3))
+plot(out,col = c("black", "grey65"))
+```
+
+
+
+## Direct binomial regression
+
+Scheike, Zhang, and Gerds (2008) propose a model  
+\[
+P(T_i \leq t | X_i) = h\{X_i^\top\eta(t)\}
+\]
+where $h$ is an inverse link function, and the coefficients may be time varying. 
+
+Under the assumption
+\[
+E(\delta_i | X_i = x, T_i = t) = P(C_i > t | X_i = x) := G(t | x), 
+\]
+they propose
+
+1. To estimate $G(t | x)$ using Kaplan-Meier or Aalen's additive model (or Cox)
+2. Solve the score equations
+\[
+\sum_{i = 1}^n \frac{\partial h\{X_i^\top\eta(t)\}}{\partial \eta} w(t, X_i) \left(\frac{\delta_i N_i(t)}{\hat{G}(t)(T_i | X_i)} - h\{X_i^\top\eta(t)\}\right),
+\]
+with some weight function $w$. 
+
+This is very similar to inverse probability weighting for missing data. 
+
+The model is consistent no matter what the weight function is, but they are now working on deriving the efficient score for this model. 
+
+Also related is the pseudo-observation approach, which we will discuss in the special topics week, but that approach involves using all observations in the estimating equations, not just the uncensored ones. 
+
+## Example
+
+From the R package `mets`
+
+
+```{r}
+library(mets)
+
+data(bmt)
+# logistic regresion with IPCW binomial regression 
+out <- binreg(Event(time,cause)~tcell+platelet,bmt,time=50)
+summary(out)
+predict(out,data.frame(tcell=c(0,1),platelet=c(1,1)),se=TRUE)
+
+```
+
+## Summary
+
+1. Additive models are appealing to some statisticians because they don't require smoothing or choice of time intervals to split. 
+2. The interpretation is actually not too tricky, but it has not been widely used in clinical/epi literature. 
+3. Appeal to the relative survival interpretation, which is very common in cancer epidemiology. 
+4. If the effect up to a single time point is of primary interest, use binomial regression. Easy interpretation, and familiar models that use slight variations on standard estimation procedures. 
+5. Additive and cumulative models are particularly appealing for causal inference. 
+
+For more of this sort of research, consider the book
+
+_Dynamic Regression Models for Survival Data_ (2006) by Torben Martinussen and Thomas H. Scheike.
+
+
+

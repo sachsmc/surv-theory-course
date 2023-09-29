@@ -1,0 +1,118 @@
+---
+title: B5440 -- Exercise 2, Processes and Martingales -- Solutions
+output: pdf_document
+fontsize: 12pt
+---
+
+1. Answer and prove the following: 
+
+a. Let $X_1, X_2, \ldots$ be independent with mean 0. Is $M_n = X_1 + \cdots + X_n$ a martingale? 
+
+**Solution**: We check the definition: 
+\begin{align*}
+E(M_n | \mathcal{F}_{n-1}) = E(X_1 + \ldots + X_n | X_1 + \ldots + X_{n-1}) = \\
+E(X_n) + X_1 + \ldots + X_{n-1} = 0 + M_n. 
+\end{align*}
+Yes, it is a martingale. 
+
+b. Let $X_1, X_2, \ldots$ be independent with mean $\mu$. Is $S_n = X_1 + \cdots + X_n$ a martingale?
+**Solution**: We check the definition: 
+\begin{align*}
+E(M_n | \mathcal{F}_{n-1}) = E(X_1 + \ldots + X_n | X_1 + \ldots + X_{n-1}) = \\
+E(X_n) + X_1 + \ldots + X_{n-1} = \mu + M_n. 
+\end{align*}
+So if $\mu \neq 0$, then it is **not** a martingale. 
+
+c. Let $X_1, X_2, \ldots$ be independent with mean 1. Is $M_n = X_1 \cdot X_2 \cdots X_n$ a martingale? **Solution**: We check the definition: 
+\begin{align*}
+E(M_n | \mathcal{F}_{n-1}) = E(X_1 \cdot \ldots \cdot X_n | X_1 \cdot \ldots \cdot X_{n-1}) = \\
+E(X_n)\cdot (X_1 \cdot \ldots \cdot X_{n-1}) = 1 \cdot M_n. 
+\end{align*}
+Yes, it is a martingale. 
+
+2. Show that if $M$ is a martingale then so is the stopped process $M^T$. 
+
+**Solution**: First in the discrete time case, if $M_n$ is a martingale then the stopped process $M^T_n = M_n$ if $n \leq T$ and $= M_T$ if $n > T$. We will use the fact that transformations of martingales by predictable processes are also martingales. So we need to find a transformation $H_n$ that is predictable at time $n - 1$ such that $M^T = H \bullet M$. It is $H_n = 1$ if $n \leq T$ and $H_n = 0$ if $n > T$. This is predictable at time $n - 1$ because "today" we know whether we have reached $T$ or not, thus "tomorrow's" value of $H$ is known.
+
+In continuous time we have 
+\[
+M^T(t) = \int_0^{t\wedge T} \, dM(u) = \int_0^t 1\{u \leq T\}\, dM(u)
+\]
+which is a stochastic integral. The transformation $H(t) = 1\{t \leq T\}$ is predictable with respect to $\mathcal{F}_{t-}$ because it is adapted and it is left continuous. Therefore the stopped process is also a martingale.
+
+
+
+3. Poisson process compensator:
+
+Let $N(t)$ be the number of events in $[0,t]$ where $N(t) - N(s) \sim \mbox{Poisson}((t - s)\lambda)$ for $s < t$ and $N$ has independent increments. 
+
+Does the Doob-Meyer decomposition apply to $N(t)$? If so, identify the compensator of $N(t)$. Also find the predictable variation process. 
+
+### Solution
+
+Problem statement: Find the unique predictable process $X(t)$ such that $N(t) - X(t)$ is a martingale.
+
+#### Steps (WAG method): 
+
+1. I think $X(t) = \lambda t$. 
+2. Is $\lambda t$ predictable? Yes, it is left-continuous because 
+\[
+\lim_{s\uparrow t} \lambda s = \lambda t
+\]
+and all left-continuous processes are predictable. 
+3. Is $N(t) - \lambda t$ a martingale? Let's check the definition: for $s < t$, we have
+\begin{align*}
+E(N(t) - \lambda t | \mathcal{F}_s) = E(N(t) - N(s) + N(s) - \lambda t | \mathcal{F}_s) = \\
+E(N(t) - N(s) | \mathcal{F}_s) + E(N(s) | \mathcal{F}_s) - \lambda t = \\
+E(N(t) - N(s)) + N(s) - \lambda t = \\
+(t - s) \lambda + N(s) - \lambda t = N(s) - \lambda s. 
+\end{align*}
+
+#### Steps (start at the end method): 
+
+1. $N(t) - X(t)$ is a martingale iff $E(N(t) - X(t) | \mathcal{F}_s) = N(s) - X(s)$ for $s < t$ and a predictable process $X$. Hence, 
+\begin{align*}
+E(N(t) - X(t) - N(s) + X(s) | \mathcal{F}_s) = 0 \Leftrightarrow \\
+E((N(t) - N(s)) + (X(s) - X(t)) | \mathcal{F}_s) = 0 \Leftrightarrow \\
+E(N(t) - N(s) | \mathcal{F}_s) = E(X(t) - X(s) | \mathcal{F}_s) \Leftrightarrow \\
+(t - s)\lambda = E(X(t) - X(s) | \mathcal{F}_s). 
+\end{align*}
+Since $X(t)$ is predictable, we must have $E(X(t) - X(s) | \mathcal{F}_s) = X(t) - X(s)$. If not, then we could find a $t^*$ such that $E(X(t^*) | \mathcal{F}_{t^*-}) \neq X(t^*)$, which would violate the definition of predictability. The result follows. 
+
+## Predictable and optional variation processes
+
+We just showed that $M(t) = N(t) - \lambda t$ is a martingale. Since the Poisson distribution has the same mean and variance, we can guess that $\langle M \rangle = \lambda t$. 
+
+By the Doob Meyer, and the fact that $\lambda t$ is predictable, we have to show that $M^2(t) - \lambda t$ is a martingale. We do this by checking the definition: 
+\begin{align*}
+E((N(t) - \lambda t)^2 - \lambda t | \mathcal{F}_s) = \\
+E(N^2(t) - 2N(t)\lambda t + \lambda^2 t^2 - \lambda t | \mathcal{F}_s).\\
+\end{align*}
+Above we showed that $E(N(t) | \mathcal{F}_s) = N(s) + \lambda (t - s)$ by adding and subtracting $N(s)$, so we have now
+\begin{align*}
+E(N^2(t) | \mathcal{F}_s) - 2(N(s) + \lambda (t - s))\lambda t + \lambda^2 t^2 - \lambda t = \\
+E(N^2(t) | \mathcal{F}_s) - 2N(s) \lambda t - 2\lambda^2 t^2 + 2\lambda^2 st + \lambda^2 t^2 - \lambda t = \\
+E(N^2(t) | \mathcal{F}_s) - 2N(s) \lambda t - \lambda^2 t^2 + 2\lambda^2 st - \lambda t. 
+\end{align*}
+Looking now at the first term, it equals
+\begin{align*}
+E((N(s) + N(t) - N(s))^2 | \mathcal{F}_s) = \\
+N(s)^2 + 2N(s)E(N(t) - N(s)) + E((N(t) - N(s))^2) = \\
+N(s)^2 + 2N(s) \lambda (t - s) + Var(N(t) - N(s)) + (E(N(t) - N(s)))^2 = \\
+N(s)^2 + 2N(s) \lambda (t - s) + \lambda (t - s) + \lambda^2 (t - s)^2. 
+\end{align*}
+Plugging back into the last line of the previous display: 
+\begin{align*}
+N(s)^2 + 2N(s) \lambda (t - s) + \lambda (t - s) + \lambda^2 (t - s)^2 - 2N(s) \lambda t - \lambda^2 t^2 + 2\lambda^2 st - \lambda t = \\
+N(s)^2 - 2N(s) \lambda s - \lambda s + \lambda^2 (t - s)^2 - \lambda^2 t^2 + 2\lambda^2 st  = \\
+N(s)^2 - 2N(s) \lambda s - \lambda s - \lambda^2s^2  = \\
+(N(s) - \lambda s)^2 - \lambda s,
+\end{align*}
+which shows that the martingale property is satisfied. 
+
+What about $[M](t)$? For this we use the definition of the optional variation process, and observe that it equals 
+\begin{align*}
+\sum_{s \leq t} (M(s) - M(s-))^2 = \sum_{s \leq t} (N(s) - N(s-) + \lambda s - \lambda s)^2 = \\
+\sum_{s \leq t} (N(s) - N(s-))^2.
+\end{align*}
+Now if there is a jump at $s$ the term in the sum equals 1, and if not, it equals 0. So this sum counts the number of events that occurred up to $t$, in other words it equals $N(t)$ itself. This is true for any counting process. 

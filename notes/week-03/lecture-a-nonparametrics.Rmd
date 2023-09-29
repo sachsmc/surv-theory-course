@@ -1,0 +1,343 @@
+---
+title: Survival Theory Course
+subtitle: Nonparametric statistics -- Asymptotic properties
+author: Michael Sachs
+output: slidy_presentation
+---
+
+## Outline
+
+1. Nelson-Aalen
+2. Kaplan-Meier
+
+with some detours
+
+
+## Nelson-Aalen
+
+Recall the cumulative hazard defined as $A(t) = \int_0^t\alpha(s) ds$ if the distribution function is absolutely continuous.
+
+The Nelson-Aalen estimator is 
+\[
+\hat{A}(t) = \sum_{T_j \leq t} \frac{D_j}{Y(T_j)}. 
+\]
+This was motivated by using the life-table approach (counting events in time intervals) and then taking the limit so that only one event can occur in each interval. We can write this as
+\[
+\hat{A}(t) = \int_0^t \frac{I\{Y(u) > 0\}}{Y(u)}\, dN(u), 
+\]
+which is an estimate of the quantity
+\[
+A^*(t) = \int_0^t I\{Y(u) > 0\} \alpha(u) \, du.
+\]
+
+## The product integral
+
+In general, in the non absolutely continuous case, the density and hazard $\alpha(t)$ are not defined, but we define the cumulative hazard as 
+\[
+A(t) = -\int_0^t\frac{1}{S(u-)}\, dS(u) = \int_0^t\frac{1}{1 - F(u-)}\, dF(u). 
+\]
+
+To connect this back to the survival function, let $0 = t_0 < t_1 < \ldots < t_n = t$ denote a partition of $[0, t)$ and define the _product integral_
+\[
+\prod_u^t\{1 - dB(u)\} = \lim_{\mathcal{M} \rightarrow 0}\prod_{k=1}^K\{1 - ((B(t_k) - B(t_{k-1})))\}
+\]
+where $\mathcal{M} = \max_k|t_k - t_{k-1}|$ is the length of the longest subinterval.
+
+We then have, with $A$ defined as above
+
+\[
+S(t) = \prod_u^t\{1 - dA(u)\}
+\]
+and it is true (but not trivial) that in the absolutely continuous case, this simplifies to what we had before
+\[
+S(t) = \exp\{-A(t)\}.
+\]
+This also suggests the plug-in estimator
+\[
+\hat{S}(t) = \prod_u^t\{1 - d\hat{A}(u)\}. 
+\]
+
+## Kaplan-Meier
+
+From the previous slide
+\[
+\hat{S}(t) = \prod_u^t\{1 + d\hat{A}(u)\} = \prod_{T_j \leq t} 1 - \frac{I(Y(T_j) > 0)}{Y(T_j)}.
+\]
+
+Using the relation $S(t) = exp(-A(t))$ we might consider estimating $S(t)$ by 
+\[
+exp(-\hat{A}(t)) = \prod_{T_j \leq t} exp(- D_j / Y(T_j)).
+\]
+For small values of $D_j / Y(T_j)$, the right hand side is approximately
+\[
+\prod_{T_j \leq t}(1 - D_j / Y(T_j)), 
+\]
+which is exactly the Kaplan-Meier estimator. 
+
+The product integral representation formalizes this approximation and provides a unified framework for working with these quantities.
+
+## Nelson-Aalen analysis
+
+\[
+\hat{A}(t) = \sum_{T_j \leq t} \frac{D_j}{Y(T_j)}. 
+\]
+This was motivated by using the life-table approach (counting events in time intervals) and then taking the limit so that only one event can occur in each interval. Following page 87 in the book (sort of), the Doob-Meyer decomposition says
+\[
+N(t) = \Lambda(t) + M(t) = \int_0^t\lambda(u)\, du + M(t), 
+\]
+so we can write
+\[
+dN(t) = \alpha(t)Y(t)\,dt + dM(t). 
+\]
+Let $J(t) = I\{Y(t) > 0\}$. Then 
+\[
+\frac{J(t)}{Y(t)} dN(t) = J(t) \alpha(t) dt + \frac{J(t)}{Y(t)} dM(t)
+\]
+and integrating we have
+\[
+\int_0^t\frac{J(u)}{Y(u)} dN(u) = \int_0^t J(u) \alpha(u) du + \int_0^t\frac{J(t)}{Y(t)} dM(t).
+\]
+What have we done here? Explain the terms of the last equation.
+
+## NA properties
+
+$\hat{A}(t) = \int_0^t\frac{J(u)}{Y(u)} dN(u)$ and $A^*(t) = \int_0^t J(u) \alpha(u) du$ hence 
+\[
+\hat{A}(t) - A^*(t) = \int_0^t\frac{J(t)}{Y(t)} dM(t).
+\]
+
+1. Unbiasedness? What is the expectation of the right hand side and why?
+
+## NA variation process
+
+2. Variation process? 
+
+\[
+[\hat{A} - A^*](t) = \int_0^t\frac{J(u)}{Y(u)^2}dN(u)
+\]
+because the integrand is predictable, 
+\[
+[\int H\, dM] = \int H^2 \, d[M]
+\]
+and $M$ is mean 0. Hence, 
+\[
+\hat\sigma^2(t) = \int_0^t\frac{J(u)}{Y(u)^2}dN(u),
+\]
+is an unbiased estimator of the variance of the NA estimator.
+
+Likewise, 
+
+\[
+\langle \hat{A} - A^*\rangle(t) = \int_0^t\frac{J(u)}{Y(u)} \alpha(u) \, du.
+\]
+
+
+## Asymptotic properties
+
+Consider the martingale
+\[
+\sqrt{n}(\hat{A}(t) - A^*(t)) = \int_0^t \sqrt{n}\frac{J(u)}{Y(u)} \, dM(u).
+\]
+We need to verify the conditions of the martingale central limit theorem. In this context, they take the form
+
+1. $H^{(n)}(t)^2\lambda(t) \rightarrow_p v(t) > 0$ for all $t$ as $n \rightarrow \infty$
+2. $H^{(n)}(t) \rightarrow_p 0$ for all $t$ as $n \rightarrow \infty$, 
+
+where $H^{(n)}(t) = \sqrt{n}J(t) / Y(t)$ and $\lambda(t) = Y(t) \alpha(t)$. Starting with 1, we have 
+\[
+\frac{J(t)\alpha(t)}{Y(t) / n}
+\]
+and 2,
+\[
+\frac{1}{\sqrt{n}}\frac{J(t)}{Y(t) / n}.
+\]
+We need the first one to converge to something fixed and positive, and the second one to converge to 0. What do?
+
+## Asymptotic properties continued
+
+If we assume $Y(t) / n \rightarrow_p y(t)$, for some fixed $y(t)>0$ for all $t$, or maybe
+\[
+\sup_{t}|Y(t)/n - y(t)| \rightarrow_p 0,
+\]
+then everything works out nicely. Specifically, we have
+\[
+\sqrt{n}(\hat{A}(t) - A^*(t)) \Rightarrow W(\sigma(t))
+\]
+where $W$ is a Weiner process/Brownian motion and 
+\[
+\sigma(t) = \int_0^t \frac{\alpha(u)}{y(u)} \, du.
+\]
+An estimator of the variance process is 
+\[
+\hat{\sigma}(t) = \int_0^t\frac{J(u)}{Y(u)^2}\, dN(u). 
+\]
+
+But, we wanted to estimate $A(t)$ not $A^*(t)$. The yellow book says "asymptotically there is no difference". Can someone explain why?
+
+## $A$ vs $A^*$
+
+\[
+E(A(t) - A^*(t)) = E\, \int_0^t (I(Y(u) > 0) - I(Y(u) \geq 0) )\alpha(u)\, du
+\]
+\[
+= \int_0^tP(Y(u) = 0) \alpha(u) \,du \leq P(Y(t) = 0) \alpha(t), 
+\]
+since $P(Y(u) = 0)$ is increasing in $u$. Noting that $Y(t)$ is the aggregated process $\sum_{i=1}^nY_i(t)$, this can be written
+\[
+(1 - \pi(t))^n \alpha(t)
+\]
+where $\pi(t) = \pi_i(t) = P(Y_i(t) = 1)$. This converges to 0 rapidly as $n$ increases. The result follows since we have already established unbiasedness of $\hat{A}$ for $A^*$. 
+
+See page 92 of Fleming and Harrington. 
+
+You could also argue that since $Y(t) / n \rightarrow_p y(t)$, for some fixed $y(t)>0$ for all $t$, then $J(t) \rightarrow_p 1$. 
+
+## Uniform consistency
+
+What about uniform consistency? I.e., can we prove
+\[
+\sup_t|\hat{A}(t) - A(t)| \rightarrow_p 0?    
+\]
+The yellow book completely glosses over this, but it is covered on page 112 of Fleming and Harrington. The proof relies on the corollary to Lenglart's inequality, which says, 
+
+\[
+P\{\sup_{t\leq T}\{\int_0^tH(u)dM(u)\}^2 \geq \epsilon \} \leq \frac{\eta}{\epsilon} + P\{\int_0^TH^2(u)\,d\langle M \rangle(u) \geq \eta\}, 
+\]
+
+for constants $\epsilon, \eta$, a martingale $M$, predictable process $H$ and stopping time $T$. 
+
+To complete the proof:
+
+1. Write $\sup_t|\hat{A}(t) - A(t)|$ in the form of the left side (already done above)
+2. Derive the form of $H^2$ and $\langle M \rangle$ (also done above)
+3. Show that it converges to 0 as $n \rightarrow \infty$. 
+
+
+## Product-limit
+
+The yellow book introduces the _product integral_ (note that I am using slighty different notation because the product integral font is not available in MathJax but it is in the `prodint` package in LateX): 
+\[
+\prod_u^t\{1 + dB(u)\} = \lim_{M \rightarrow 0}\prod_{k=1}^K\{1 + (B(t_k) - B(t_{k-1}))\}
+\]
+where $M = \max_k|t_k - t_{k-1}|$ is the length of the longest subinterval. They then express
+\[
+S(t) = \prod_u^t\{1 - dA(u)\}.
+\]
+They describe how this relates the cumulative hazard to the survival in a general framework. So why not plug in our NA estimator and see what we get: 
+\[
+\prod_u^t\{1 - d\hat{A}(u)\} = \prod_{T_j \leq t}\{1 - \frac{dN(T_j)}{Y(T_j)}\}, 
+\]
+which is the Kaplan-Meier estimator again. 
+
+## Kaplan-Meier
+
+Starting with the relation
+\[
+A(t) = \int_0^t \frac{dF(u)}{S(u-)}, 
+\]
+consider 
+\[
+dA(s) = \frac{dF(s)}{1 - F(s-)} \Leftrightarrow S(s-)dA(s) = dF(s)
+\]
+and hence
+\[
+F(t) = \int_0^td S(u-)\,dA(u) \Leftrightarrow S(t) = 1 - \int_0^td S(u-)\,dA(u).
+\]
+This recursive relationship suggests that if we could plug in the NA estimate $\hat{A}$ and solve for $S$ we would have a nice estimate of $S$. This nice estimator turns out to be the Kaplan-Meier. See page 94 of Fleming and Harrington. 
+
+
+## Duhamel's equation
+
+There are many ways to arrive at the KM estimator $\hat{S}(t)$, but the representation we are going to analyze its properties with our martingales is based on the ratio
+\[
+\frac{\hat{S}(t)}{S^*(t)} - 1 = -\int_0^t\frac{\hat{S}(u-)}{S^*(u)}\, d(\hat{A} - A^*)(u), 
+\]
+where $S^*(t) = exp\{-A^*(t)\}$ which is again "close enough" to $S$ asymptotically. 
+
+This can be proven using the relations on the previous slide, an integration by parts formula, and a formula for the derivative of an inverse. See page 97 of Fleming and Harrington. 
+
+Replacing $S^*$/$A^*$ with $S$/$A$, we have 
+\[
+\frac{\hat{S}(t)}{S(t)} = 1 - \int_0^t\frac{\hat{S}(u-)}{S(u)}\, d(\hat{A} - A)(u)
+\]
+and since $\hat{A} - A = M$ is a mean 0 martingale, if the integrand is predictable, then the integral is also a martingale. Then this equation suggests the KM estimator is pretty good (but this is a weird way to say it). 
+
+## Bias and variance
+
+Starting from the previous result, a corollary is
+\[
+\hat{S}(t) - S(t) = -S(t)\int_0^t\frac{\hat{S}(u-)}{S(u)}\frac{J(u)}{Y(u)}\, dM(u) + B(t), 
+\]
+where for $T = \inf(s: Y(s) = 0)$,
+\[
+B(t) = I(T < t) \frac{\hat{S}(T)\{S(T) - S(t)\}}{S(T)}.
+\]
+$B$ is the bias term. Its expectation is nonzero, but converges very quickly to 0. See page 99 of Fleming and Harrington. 
+
+Looking at $E(B^2(t))$ and exploiting the relationship between $A$ and $S$ allows you to derive an approximation of the variance of $\hat{S}$ and therefore an estimator of the variance. Details omitted here but they are in Fleming and Harrington starting on bottom of page 103. 
+
+This decomposition is also used to derive the asymptotic results (so make a note).
+
+## Asymptotic distribution of KM
+
+Result: Under the random censoring model, with $\hat{F}(t) = 1 - \hat{S}(t)$, and assuming
+\[
+\sup_{t}|Y(t)/n - y(t)| \rightarrow_p 0,
+\]
+then
+\[
+\sqrt{n}(\hat{F}(\cdot) - F(\cdot)) \Rightarrow S(\cdot) \, W(\sigma(\cdot)), 
+\]
+in $D[0,\tau]$, where $W$ is a Brownian motion, and $\sigma(t) = \int_0^t \frac{\alpha(u)}{y(u)} \, du.$
+
+The covariance of the limiting process evaluated at $0 \leq s \leq t$ is 
+\[
+S(t)S(s) \int_0^s \frac{\alpha(u)}{y(u)} \,du.
+\]
+
+
+## Proof sketch
+
+1. Use the same decomposition of $\hat{S}$ that gave us the bias term (scaled by $\sqrt{n}$ now)
+2. The scaled bias term converges uniformly to 0 in probability, then analyze the first term which is 
+\[
+-S(t)\int_0^t\sqrt{n}\frac{\hat{S}(u-)}{S(u)}\frac{J(u)}{Y(u)}\, dM(u).
+\]
+3. This is a transformation of a martingale, so it remains to verify the conditions of the martingale central limit theorem for this particular form of $H$.
+
+Details on page 236 of Fleming and Harrington.
+
+## Uniform consistency of KM
+
+Uniform consistency can be established using the bias decomposition and another application of Lenglart's inequality. Using that, we can state additional results: 
+
+1. 
+\[
+\sqrt{n}(\frac{\hat{F}(\cdot) - F(\cdot)}{\hat{S}(\cdot)}) \Rightarrow W(\sigma(\cdot))
+\]
+in $D[0,\tau]$.
+2. 
+\[
+\sup_{s \leq t}\left\{\frac{1}{\hat{\sigma}(t)}\right\}^{1/2}\left\{\frac{\hat{F}(s) - F(s)}{\hat{S}(s)}\right\} \rightarrow_d \sup_{x \in (0, 1)}W(x).
+\]
+3. 
+\[
+\sup_{s \leq t}\left\{\frac{1}{\hat{\sigma}(t)}\right\}^{1/2}\left\{\frac{|\hat{F}(s) - F(s)|}{\hat{S}(s)}\right\} \rightarrow_d \sup_{x \in (0, 1)}|W(x)|.
+\]
+
+
+
+## Summary
+
+- The martingale representations of the estimators of interest allow us to use the martingale theory: 
+    1. Transformations
+    2. Expectations
+    3. Inequalities
+    4. Limit theorems
+- The theory is much more general than what we've seen so far, so let's see where else we can apply it. 
+- Next up: Test statistics and confidence bands
+
+
+
+
+

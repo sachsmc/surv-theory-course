@@ -1,0 +1,775 @@
+---
+title: "Survival Theory Course"
+subtitle: "Parametric models"
+author: Andrea Discacciati
+output: slidy_presentation
+editor_options: 
+  chunk_output_type: console
+---
+
+``` {r setup, include = FALSE}
+library(dplyr)
+library(ggplot2)
+
+knitr::opts_chunk$set(fig.width=7, fig.asp=.5, fig.align = 'center') 
+```
+
+# Intro: parametric models for continuous survival times
+
+The aim is to model the intensity process $\lambda_i(t)$ of a counting process $N_i(t)$ ($i=1,\ldots,n$) using _parametric models_ specified by a finite-dimensional parameter vector $\theta$. 
+
+We will assume a multiplicative intensity model
+
+\[
+\lambda_i(t; \theta) = Y_i(t)\alpha(t; \theta)
+\]
+
+where $Y_i(t)$ is the usual at-risk process and $\alpha(t; \theta)$ the hazard function.
+
+For regression models, the hazard function will depend on a finite-dimensional covariate vector (fixed or time-dependent) $x_i(t)$.
+
+\[
+\lambda_i(t; \theta) = Y_i(t)\alpha_i(t;\theta, x_i(t)) 
+\]
+
+We'll focus on _likelihood_ inference.
+
+<br>
+
+> "Parametric models are important and should be used more extensively in biomedical survival analysis."  ---ABG, page 35
+
+
+
+# Outline
+
+1. Likelihood for parametric models
+2. Asymptotic properties of the MLE
+3. Parametric regression models
+
+
+# Likelihood: random censoring I
+
+<!-- How would have we approached this problem before taking this course? -->
+
+Let $T_1,\ldots,T_n$ be iid absolutely continuous rv's with pdf $f(t;\theta)$ and
+survivor function $S(t; \theta)$. Let $C_1,\ldots,C_n$ be iid rv's with pdf and
+survivor function $g(t; \eta)$ and  $G(t; \eta)$, respectively.
+
+We assume that the $T_i$'s are independent of the $C_i$'s (_random censoring_, which includes type I censoring).
+
+We observe $(\tilde{T}_i, D_i)$, where $\tilde{T}_i=T_i \wedge C_i$ and $D_i = I(\tilde{T}_i = T_i)$.
+
+The contributions to the likelihood are
+
+\begin{align}
+P[\tilde{T}_i \in [t, t+dt), D_i=1] = &P[T_i \in [t, t+dt), C_i>t] = \\
+& P[T_i \in [t, t+dt)]P[C_i>t] \propto \\
+& f(t;\theta)G(t; \eta)
+\end{align}
+
+\begin{align}
+P[\tilde{T}_i \in [t, t+dt), D_i=0] = &P[C_i \in [t, t+dt), T_i>t] = \\
+& P[C_i \in [t, t+dt)]P[T_i>t] \propto \\
+& g(t;\eta)S(t; \theta)
+\end{align}
+
+The above can be extended so that independence holds _given covariates_.
+
+
+# Likelihood: random censoring II
+
+Since the contributions from the $n$ individuals are independent, 
+the likelihood is 
+
+\[
+L(\theta, \eta) = \prod_{i=1}^n [f(\tilde{T}_i;\theta)G(\tilde{T}_i; \eta)]^{D_i}[g(\tilde{T}_i;\eta)S(\tilde{T}_i; \theta)]^{1-D_i}
+\]
+
+If we assume that censoring is _noninformative_ ($G_i(t)$, $g_i(t)$ do not involve $\theta$), we can factorize the likelihood 
+
+\[
+L(\theta) \propto \prod_{i=1}^n [f(\tilde{T}_i;\theta)]^{D_i}[S(\tilde{T}_i; \theta)]^{1-D_i}
+\]
+
+
+# Notes on the likelihood
+
+This likelihood is more generally correct than the derivation above would suggest, which was based on the contributions from the individuals to the likelihood being independent
+and on random censoring.
+
+In particular, the form of that likelihood is appropriate in case of _independent censoring_ mechanisms. These include, but are not limited to, random censoring. Type II censoring is an example of independent (but not random) right censoring.
+
+How can we construct the likelihood in this more general case, then? Using counting process theory. The likelihood is then built up by considering the experience of the study individuals as it evolves over time. 
+
+
+
+# Two equivalent expressions for the likelihood
+
+\begin{align}
+\tag{1}
+L(\theta) &\propto \prod_{i=1}^n [f(\tilde{T}_i;\theta)]^{D_i}[S(\tilde{T}_i; \theta)]^{1-D_i} \\
+&= \prod_{i=1}^n \alpha(\tilde{T}_i;\theta)^{D_i}\exp\left\{- \int_0^{\tilde{T}_i} \alpha(t;\theta)dt\right\}
+\end{align}
+
+Let's rewrite the likelihood in terms of the counting processes $N_i(t)=I\{\tilde{T}_i \le t; D_i=1\}$ 
+and their intensity processes $\lambda_i(t;\theta)=Y_i(t)\alpha(t;\theta)$. 
+We will use $N_\bullet(t) = \sum_{i = 1}^n N_i(t)$ and likewise for $Y_\bullet(t)$ and $\lambda_\bullet(t)$. Let denote by $\tau$ the upper time limit for the study <!--($\tilde{T}_i \le \tau$, $\forall i)$--> and $\Delta N_i(t) = N_i(t) -N_i(t-)$ (ie, $\Delta N_i(t)=1$ if it $N_i(t)$ jumps at $t$, $0$ otherwise). 
+
+The contribution to the likelihood for the $i$-th observation is
+
+<span style="color:grey">[We use the notational convention $0^0=1$.]</span>
+
+\begin{align}
+L_i(\theta) &= \left\{ \prod_{0<t≤\tau} \{ Y_i(t) \alpha(t;\theta) \}^{\Delta N_i(t)} \right\} \exp\left\{- \int_0^{\tau} Y_i(t) \alpha(t;\theta)dt \right\} \\
+&= \left\{ \prod_{0<t≤\tau} \lambda_i(t;\theta)^{\Delta N_i(t)} \right\} \exp\left\{- \int_0^{\tau} \lambda_i(t;\theta) dt\right\}
+\end{align}
+
+and the likelihood is
+
+\[
+L(\theta) = \left\{ \prod_{i=1}^n \prod_{0<t≤\tau} \{ \lambda_i(t;\theta) \}^{\Delta N_i(t)} \right\} \exp\left\{- \int_0^{\tau} \lambda_{\bullet}(t;\theta) dt \right\}
+\tag{2}
+\]
+
+
+We haven't shown that (2) can be derived under independent (but not necessarily random) censoring yet, we've just shown
+that (1) can be rewritten in terms of counting processes. This will come useful later.
+
+<!-- Equation (1) and (2) describe two ways of viewing survival data -->
+
+Equation (1) is a natural way to view the problem with random censoring 
+
+ - Asymptotic arguments follow from "standard" MLE theory
+    
+Equation (2) arises from viewing the survival data as unfolding sequentially in time
+
+ - Asymptotic results make use of the theory of counting processes (eg martingale CLT)
+
+# Likelihood for counting process models I
+
+Let the right continuous history be
+
+\[
+\mathcal{F}_{t} = \sigma\left\{N(u), Y(u+): 0 \le u \le t \right\}, \forall t > 0,
+\]
+
+so that $\mathcal{F}_{t^-}$ represent the information up to but not including time $t$.
+
+We partition the study time interval $[0, \tau]$ into $K$ small time intervals $0 = t_0 < t_1 < \cdots < t_K = \tau$, each of length $dt$. 
+
+
+Let $D_{t_{k}}(dt) = \{i: dN_i(t_k)=1\}$ be the set of labels associated with the individuals failing 
+in $[t_k, t_k+dt)$ and $C_{t_k}(dt)$ be an analogous set, but for censored individuals. 
+
+We drop the subscript $k$ to simplify notation and we focus on the conditional probability
+
+\begin{align}
+P(\mathcal{F}_{t+dt}|\mathcal{F}_{t^-}) &= P(D_t(dt), C_t(dt)|\mathcal{F}_{t^-}) \\
+&= P(D_t(dt)|\mathcal{F}_{t^-})P(C_t(dt)|\mathcal{F}_{t^-}, D_t(dt))
+\end{align}
+
+We assume that
+
+1. Given $\mathcal{F}_{t^-}$, the failure mechanisms act independently over $[t, t+dt)$ (multinomial trial with $n+1$ possible outcomes)
+
+2. Censoring is independent, ie $P(dN_i(t)=1|\mathcal{F}_{t^-})=\lambda_i(t)dt$
+
+It follows that
+
+\begin{align}
+P(D_t(dt)|\mathcal{F}_{t^-}) &= \left( \prod_{i=1}^n P(dN_i(t)=1|\mathcal{F}_{t^-})^{dN_i(t)} \right) P(dN_{\bullet}(t)=0|\mathcal{F}_{t^-})^{1-dN_{\bullet}(t)} \\
+&= \prod_{i=1}^n (\lambda_i(t;\theta)dt)^{dN_i(t)} (1-\lambda_{\bullet}(t;\theta)dt)^{1-dN_{\bullet}(t)}
+\end{align}
+
+# Likelihood for counting process models II
+
+\begin{align}
+P(D_t(dt)|\mathcal{F}_{t^-}) &=  \prod_{i=1}^n (\lambda_i(t;\theta)dt)^{dN_i(t)} (1-\lambda_{\bullet}(t;\theta)dt)^{1-dN_{\bullet}(t)}
+\end{align}
+
+
+As we let $K \rightarrow \infty$, the total likelihood can be written as a product integral ($\mathscr{P}$)
+
+\begin{align}
+\mathscr{L} &= \mathscr{P}_0^{\tau} P(\mathcal{F}_{t+dt}|\mathcal{F}_{t^-}) \\
+&= \mathscr{P}_0^{\tau} P(D_t(dt), C_t(dt)|\mathcal{F}_{t^-}) \\
+&= \mathscr{P}_0^{\tau} P(D_t(dt)|\mathcal{F}_{t^-}) \mathscr{P}_0^{\tau} P(C_t(dt)|\mathcal{F}_{t^-}, D_t(dt))
+\end{align}
+
+<!-- <span style="color:grey">[$\mathscr{P}$ is the product integral (ABG A.1): $\mathscr{P}_0^{\infty} P(\mathcal{F}_{t^-+dt}|\mathcal{F}_{t^-}) = \lim \prod_{i=0}^{m-1} P(\mathcal{F}_{\tau_i^-+\Delta\tau_i}|\mathcal{F}_{t_i^-})$ where $0=\tau_0<\cdots<\tau_m<\infty, \Delta\tau_i=\tau_i-\tau_{i-1}, \tau_m\rightarrow\infty$ as $m\rightarrow\infty$, and the limit is taken as $m\rightarrow\infty$ and $\Delta\tau_i\rightarrow0$.]</span> -->
+
+We focus on the first factor of $\mathscr{L}$ and noting that 
+
+  1. Each counting process will have at most a finite number of jumps
+  
+  2. We can neglect differential elements
+  
+  3. The exponent $1-dN_{\bullet}(t)$ equals 1 for all but a finite number of time points and can be replaced by $1$
+
+we write
+
+\begin{align}
+L(\theta) &= \left\{ \prod_{i=1}^n \prod_{0<t≤\tau} \lambda_i(t;\theta)^{\Delta N_i(t)} \right\} \mathscr{P}_0^{\tau} (1-\lambda_{\bullet}(t;\theta)dt) \\
+&= \left\{ \prod_{i=1}^n \prod_{0<t≤\tau} \lambda_i(t;\theta)^{\Delta N_i(t)} \right\} \exp\left\{- \int_0^{\tau} \lambda_{\bullet}(t;\theta) dt \right\}
+\end{align}
+
+which we showed to be equivalent to (1).
+
+<!-- See ABG 5.1.3, Kalbfleisch and Prentice 6.2, 6.3. -->
+<!-- Details are in ABGK II.7.1. -->
+
+# What about the remaining factor in $\mathscr{L}$?
+
+The remaining factor in $\mathscr{L}$
+
+\[
+\mathscr{P}_0^{\tau} P(C_t(dt)|\mathcal{F}_{t^-}, D_t(dt))
+\]
+
+arises from the censoring contributions.
+
+If the censoring mechanism is _informative_, then the factor above depends on 
+$\theta$ and $L(\theta)$ is a _partial_ likelihood.
+
+In any case, (2) can be used for inference as the ML estimator $\hat{\theta}$ based
+on the partial likelihood enjoys
+the "usual properties" for MLEs (ABGK II.7.3) 
+
+- consistency 
+
+- asymptotic normal distribution 
+
+
+# Example, type II censoring
+
+Type II censoring scheme: only the smallest $r$ event times are observed, while the remaining $(n-r)$ event times are right-censored at $T_{(r)}$ and the study terminates. $r$ is chosen before the study starts.
+
+Type II censoring is not random. The likelihood under this censoring mechanism
+cannot be constructed following the "random censoring approach" and one needs to proceed in a different way.
+
+However, the independent censoring assumption is fulfilled. In fact, $\mathcal{G}_{t} = \mathcal{F}_{t}^C$ since $T_{(r)}$ is a stopping time wrt $\mathcal{F}_{t}^C$ (ABG 2.2.8)<!--(the information in $\mathcal{F}_{t}^C$ is enough to tell whether or not an event at time $T$ has already occurred by a fixed time $t$)-->.
+
+One could also argue that
+
+1.  The stopped counting process $N^{T} = \int I_{[0, T_{(r)}]}dN^C$ has cumulative intensity process $\int I_{[0, T_{(r)}]}d\Lambda$ wrt $\mathcal{F}_{t}^C$, where $\Lambda$ is the cumulative intensity of $N^C$, and intensity process $\lambda I_{[0, T_{(r)}]}$. ($I_{[0, T_{(r)}]}$, the censoring process, is predictable wrt $\mathcal{F}_{t}^C$, since it's left-continuous and $T_{(r)}$ is a stopping time). 
+
+2. By the innovation theorem, $\lambda I_{[0, T_{(r)}]}$ remains the intensity process of $N^T$ also wrt $\mathcal{F}_{t \wedge T_{(r)}}$. ($N^T$ and $\lambda I_{[0, T_{(r)}]}$ are adapted to this smaller filtration).
+
+See Lecture on Likelihoods and Censoring, ABGK II.4.4.  
+
+Either way, the intensity of $N^C$ is preserved under type II censoring. The likelihood can be constructed following the "counting process approach". 
+
+
+
+# Log-likelihood and score processes
+
+We will consider the case where $\theta$ is a scalar to keep the notation simple.
+
+The log-likelihood process is
+\[
+l_t(\theta)=\log L_t(\theta) = \sum_{i=1}^n \int_0^{t} \log\lambda_i(s;\theta)dN_i(s)-\int_0^{t} \lambda_{\bullet}(s;\theta) ds 
+\]
+
+<!-- <span style="color:grey">[Integrals with step integrator function: $\int_B fdG=\sum_{n:x_n \in B} f(x_n)\Delta(x_n)$.]</span> -->
+
+The score process is
+
+\begin{align}
+U_t(\theta) =\frac{d}{d\theta}l_t(\theta)   
+ &= \sum_{i=1}^n \int_0^{t} \frac{d}{d\theta} \log\lambda_i(s;\theta)dN_i(s) - \int_0^{t} \frac{d}{d\theta} \lambda_{\bullet}(s;\theta) ds \\
+&= \sum_{i=1}^n \int_0^{t} \frac{d}{d\theta} \log\lambda_i(s;\theta)dM_i(s)
+\end{align}
+
+
+# More on the score process
+
+We denote the true value of the parameter $\theta$ by $\theta_0$.
+
+\[
+U_t(\theta_0) = \sum_{i=1}^n \int_0^{t} \frac{d}{d\theta} \log\lambda_i(s;\theta_0)dM_i(s)
+\]
+
+The integrands of $U_t(\theta_0)$ are predictable processes. $U_t(\theta_0)$ is the sum of orthogonal stochastic integrals $\int H_i dM_i$. It follows that
+
+- $E(U_t(\theta_0))=0$ for all $t$  (ABG 2.2.2, ABGK II.3.3)
+
+- <!--since $\langle \int H_i dM_i, \int H_j dM_j \rangle (t)= 0$ for all $t$ and $i \neq j$,--> $U_t(\theta_0)$ has predictable variation process (ABG 2.2.6, ABGK Proposition II.4.1)
+
+\begin{align}
+\langle U(\theta_0) \rangle (t) &= \sum_{i=1}^n \int_0^t \left( \frac{d}{d\theta} \log\lambda_i(s;\theta_0) \right)^2 \lambda_i(s;\theta_0) ds \tag{3}
+\end{align}
+
+
+
+
+```{r, include = F, eval = F}
+# PVP of the score process
+
+\begin{align}
+\langle U_t(\theta_0) \rangle &= \langle \sum_{i=1}^n \int_0^t \frac{d}{d\theta} \log\lambda_i(s;\theta_0)dM_i(s) \rangle \\
+&= \sum_{i=1}^n \int_0^t \left( \frac{d}{d\theta} \log\lambda_i(s;\theta_0) \right)^2 d\langle M_i(s) \rangle \\
+&= \sum_{i=1}^n \int_0^t \left( \frac{d}{d\theta} \log\lambda_i(s;\theta_0) \right)^2 \lambda_i(s;\theta_0) ds \tag{3}
+\end{align}
+
+since $\langle M_i \rangle (t) = \int_0^t \lambda_i(s) ds$.
+```
+
+# Observed and expected information matrices
+
+The _observed_ information process $I_t(\theta) = -\frac{d}{d\theta}U_t(\theta)$ and takes the form
+
+\begin{align}
+I_t(\theta) &= \int_0^{t} \frac{d^2}{d\theta^2} \lambda_{\bullet}(s;\theta) ds - \sum_{i=1}^n \int_0^{t} \frac{d^2}{d\theta^2} \log\lambda_i(s;\theta)dN_i(s) \\
+&= \langle U(\theta) \rangle (t) - \sum_{i=1}^n \int_0^t \frac{d^2}{d\theta^2} \log\lambda_i(s;\theta)dM_i(s)
+\end{align}
+
+
+
+<!-- Since the second term on the rhs is the integral of a predictable process wrt a martingale: -->
+The _expected_ information evaluated at $\theta_0$ is 
+
+\[
+ E(I_{\tau}(\theta_0)) = E(\langle U(\theta_0) \rangle  (\tau))= Var(U_{\tau}(\theta_0))
+\]
+
+after we've replaced the upper limit of integration by $\tau$.
+
+At the true parameter value, the expected information matrix value equals the covariance matrix of the score function.  
+
+
+
+<!-- where the second addendum is a stochastic integral (the integrands are predictable processes). -->
+
+# Large sample properties of the MLE
+
+Under certain regularity conditions (ABGK Condition VI.1.1) and if $\hat{\theta} \rightarrow_p \theta_0$ (*), then
+
+\[
+\sqrt{n} \left(\hat{\theta} - \theta_0 \right) \rightarrow_d N(0, \sigma(\theta_0)^{-1})
+\]
+
+as $n \rightarrow \infty$, where $\sigma(\theta_0)$ can be estimated consistently by $\frac{1}{n}I_{\tau}(\hat{\theta})$.
+
+Informally, we write
+
+\[
+\hat{\theta} \mathrel{\dot\sim} N(\theta_0, I_{\tau}(\theta_0)^{-1})
+\]
+
+(*) For a proof of the consistency of the MLE see ABGK Theorem VI.1.1.
+
+# Proof sketch of the asymptotic distribution of the MLE
+
+1. Taylor-expand $U_{\tau}(\hat{\theta})$ around $\theta_0$ and rearrange the terms (remember: $U_{\tau}(\hat{\theta})=0$)
+
+    - $\sqrt{n}(\hat{\theta}-\theta_0) = \frac{n^{-\frac{1}{2}}U_{\tau}(\theta_0)}{n^{-1} I_{\tau}(\theta^*)}$ 
+
+2. Prove that $n^{-\frac{1}{2}}U_{\tau}(\theta_0) \rightarrow_d N(0, \sigma(\theta_0))$
+
+    - From $U = \sum \int H_i dM_i$ and Condition B: $n^{-1} \langle U(\theta_0) \rangle (\tau) \rightarrow_p \sigma(\theta_0)$
+    
+      - <span style="color:grey">Condition B [alt. ABG (2.58)] guarantees that the predictable variation process of the sequence of a sum of stochastic integrals converges to a deterministic function</span>
+
+    - From this and Condition C: apply the martingale CLT and prove 2.
+    
+      - <span style="color:grey">Condition C [alt. ABG (2.59)] guarantees that the size of the jumps of the sequence of a sum of stochastic integrals goes to zero</span>
+
+3. Prove that $n^{-1} I_{\tau}(\theta^*) \rightarrow_p \sigma(\theta_0)$ for any random $\theta^*$ s.t. $\theta^* \rightarrow_p \theta_0$
+
+    - To prove 3, we Taylor-expand $I_{\tau}(\theta^*)$ around $\theta_0$. This requires that the log-likelihood is differentiable 3 times. 
+    
+    - This also establishes that $n^{-1} I_{\tau}(\hat{\theta}) \rightarrow_p \sigma(\theta_0)$
+    
+Details are in ABGK Theorem VI.1.2.
+
+
+# Examples of parametric models
+
+Parametric models include
+
+1. Exponential distribution
+
+    - $\alpha_E(t; \nu) = \nu$ (constant hazard)
+    - $A_E(t; \nu) = \nu t$ 
+    
+2. Weibull distribution
+
+    - $\alpha_W(t; b, k) = b t^{k}$ (monotonic hazard)
+    - $A_W(t; b, k) = \alpha_W(t; b, k) \frac{t}{k+1}$ 
+
+3. Log-logistic distribution
+
+    - $\alpha_L(t; a, b) = \frac{abt^{b-1}}{1+at^b}$ (non-monotonic hazard)
+    - $A_L(t; a, b) = \log(1 + at^b)$
+
+In all cases, $t>0$. 
+
+
+# Regularity conditions for the Weibull model I
+
+Consider the hazard of a Weibull model 
+\begin{align}
+\alpha_W(t;\boldsymbol\theta) &= bt^k \\ &=  \exp(\log b+k\log t) \\ &= \exp(\beta+k \log t)
+\end{align}
+where $\boldsymbol\theta = \{b, k\}$, $b>0, k>-1$. If $k<0$, then as $t\downarrow 0$, $\alpha_W(t;\boldsymbol\theta)\rightarrow\infty$
+
+```{r, echo = FALSE, warning = FALSE}
+hWeibull <- function(x, b, k) b * x ^ k
+# curve(hWeibull(x, b = 1, k = -1))
+
+expand.grid(t = seq(0, 4, length=501),
+            k = c(-0.999, -0.5, 0, 0.5, 2)) %>%
+    mutate(y = hWeibull(t, b = 1, k = k),
+           k=factor(k)) %>%
+    ggplot(aes(x=t, y=y, col=k)) + geom_line(lwd = 2) +
+    ylim(0, 4) + xlab("t") +
+    ylab("Weibull hazard rate") + theme_bw(base_size = 14)
+```
+
+Let the true parameter be represented by $\boldsymbol\theta_0$.
+
+We'll follow ABGK Example VI.1.11 to (try to) check whether the regularity conditions for the large sample properties to hold are satisfied for the Weibull model 
+(thanks to Mark Clements, MEB, Karolinska Institutet).
+
+
+# Regularity conditions for the Weibull model II
+
+- Show that there exists a neighbourhood $\boldsymbol\Theta_0$ of
+    $\boldsymbol\theta_0$ such that the derivatives of $\alpha(t;\boldsymbol\theta)$ of
+    the first, second and third order with respect to $\boldsymbol\theta$ exist
+    and are continuous in $\boldsymbol\theta$ for $\boldsymbol\theta \in \boldsymbol\Theta_0$.
+
+Partial derivatives of $\alpha_W(t;\boldsymbol\theta)$:
+\[
+\frac{\partial^{(m+n)}\alpha(t;\boldsymbol\theta)}{\partial \beta^m \partial k^n} = \exp(\beta+k\log(t))\log(t)^n
+\]
+
+- Show that $\int_0^x \alpha(t;\boldsymbol\theta)dt$ for any finite
+    $x$ may be differentiated three times with respect to
+    $\boldsymbol\theta\in\boldsymbol\Theta_0$ by interchanging the order of integration
+    and differentiation.
+
+Integral:
+
+\[
+\int_0^x \alpha_W(t;\boldsymbol\theta)dt = \frac{x\exp({\beta + k\log x})}{k+1} 
+= \frac{x \alpha_W(x;\boldsymbol\theta)}{k+1}
+\]
+
+This expression can be differentiated with respect to $\boldsymbol\theta$ at
+    least three times.
+
+This satisfies part A of Condition VI.1.1 in ABGK.
+
+
+# Regularity conditions for the Weibull model III
+
+The partial derivatives of $\log \alpha_W(t;\boldsymbol\theta)$ are
+
+\begin{align*}
+\frac{\partial\log \alpha_W(t;\boldsymbol\theta) }{\partial \beta} &= 1 \\
+\frac{\partial\log \alpha_W(t;\boldsymbol\theta) }{\partial k} &= \log t \\
+\frac{\partial^{(m+n)}\log \alpha_W(t;\boldsymbol\theta) }{\partial \beta^m \partial k^n} &= 0\quad\forall\ (m+n)>1
+\end{align*}
+
+
+# Regularity conditions for the Weibull model IV
+
+- For boundedness and integrability conditions on the derivatives of $\alpha_W(t;\boldsymbol\theta)$ with respect to $\boldsymbol\theta$ for parts B--E of Condition VI.1.1, first show that:
+
+\begin{align*}
+\int_0^\infty \left(\frac{\partial}{\partial \theta_j}\log\alpha(t;\boldsymbol\theta_0)\right)^2\alpha(t;\boldsymbol\theta_0) S(t;\boldsymbol\theta_0) dt &< \infty \\
+\int_0^\infty \left(\frac{\partial^2}{\partial \theta_j \partial\theta_l}\log\alpha(t;\boldsymbol\theta_0)\right)^2\alpha(t;\boldsymbol\theta_0) S(t;\boldsymbol\theta_0) dt &< \infty
+\end{align*}
+
+$\frac{\partial}{\partial \beta}\log\alpha_W(t;\boldsymbol\theta_0)=1$, so
+    that the left hand side (LHS) of the first inequality equals 1.
+    
+$\frac{\partial}{\partial k}\log\alpha_W(t;\boldsymbol\theta_0)=\log t$,
+    so that the LHS of the first inequality is
+    $\int_0^\infty \log(t)^2 \exp(\beta+k\log t - \exp(\beta+(k+1)\log t )\frac{1}{k+1}) dt$. Is this bounded?
+    
+$\frac{\partial^2}{\partial \beta \partial k}\log\alpha_W(t;\boldsymbol\theta_0)=0$,
+    so that the second inequality is trivially satisfied.
+    
+    
+# Regularity conditions for the Weibull model V
+
+- Show whether there exist functions $\gamma$ and $\rho$ such that for all $t\in[0,\infty]$
+
+
+\begin{align}
+\text{sup}_{\boldsymbol\theta\in\boldsymbol\Theta_o}\left| \frac{\partial^3}{\partial \theta_j \partial \theta_l \partial \theta_m} \alpha(t;\boldsymbol\theta)\right| &\leq \gamma(t) & (1) \\
+\text{sup}_{\boldsymbol\theta\in\boldsymbol\Theta_o}\left| \frac{\partial^3}{\partial \theta_j \partial \theta_l \partial \theta_m} \log\alpha(t;\boldsymbol\theta)\right| &\leq \rho(t) & (2)
+\end{align}
+
+and
+
+\begin{align}
+\int_0^\infty \gamma(t)S(t;\boldsymbol\theta_0)dt &< \infty & (3) \\
+\int_0^\infty \rho(t)\alpha(t;\boldsymbol\theta_0)S(t;\boldsymbol\theta_0)dt &< \infty & (4)
+\end{align}
+
+For inequality (1):
+
+$\frac{\partial^3}{\partial \beta^3} \alpha_W(t;\boldsymbol\theta) = \alpha_W(t;\boldsymbol\theta)$.
+    If $\gamma(t)=\alpha_W(t;\boldsymbol\theta)$ then the LHS of inequality
+    (3) is 1.
+    
+$\frac{\partial^3}{\partial \beta^m \partial k^n} \alpha_W(t;\boldsymbol\theta) = \alpha_W(t;\boldsymbol\theta)\log(t)^n$.
+    Let $\gamma(t)=|\alpha_W(t;\boldsymbol\theta)\log(t)^n|$ for $n\in\{1,2,3\}$.
+  Does this satisfy inequality (3)?
+
+Inequality (2) is trivially satisfied since $\frac{\partial^{3}\log \alpha_W(t;\boldsymbol\theta) }{\partial \beta^m \partial k^n} = 0\quad\forall\ (m+n)=3$.
+
+
+
+
+
+# Parametric regression models
+
+We assume a multiplicative intensity model for the counting process $N_i(t)$, where the intensity process takes the form
+
+\[
+\lambda_i(t; \theta) = Y_i(t)\alpha_i(t;\theta, x_i) 
+\]
+
+We will consider two regression models
+
+1. Relative risk (multiplicative) models
+
+2. Accelerated failure time models
+
+
+
+# Relative risk regression models
+
+The _relative risk_ (multiplicative) regression model is given by
+
+\[
+\alpha_i(t;\theta, x_i) = \alpha_0(t;\gamma)r(\beta^\top x_i)
+\]
+
+where $\theta = (\gamma, \beta)$ is finite-dimensional and $r(\beta^\top x_i)$ is a 
+relative risk function describing the (multiplicative) effect of the covariates on the baseline hazard
+$\alpha_0(t; \gamma)$ (defined as $\alpha_i(t; \theta)$ when $x_i = 0$).
+
+We will restrict our attention to the case where
+
+\[
+r(\cdot) = \exp(\cdot)
+\]
+
+Popular risk regression models include
+
+- (piecewise) exponential regression  
+- Weibull regression 
+- flexible parametric relative risk regression models
+
+
+# Weibull regression model
+
+\[
+\alpha_i(t;\theta, x_i) = \gamma_0 \gamma_1 t^{\gamma_1-1}\exp(\beta^\top x_i) \\
+A_i(t;\theta, x_i) = \gamma_0 t^{\gamma_1}\exp(\beta^\top x_i)
+\]
+
+where $\theta=(\gamma_0, \gamma_1, \beta)$ and $\beta$ does not include an intercept.
+
+The hazard function of the Weibull distribution is monotonic. This is a restrictive
+assumption for many applications. Can we relax this assumption? 
+
+Note that
+
+\begin{align}
+\log A_i(t;\theta, x_i) &= \log A_0(t;\gamma) + \beta^\top x_i \\
+ &= \log \gamma_0 + \gamma_1 \log t + \beta^\top x_i
+\end{align}
+
+is the sum of a constant ($\log \gamma_0$), a linear function of log time ($\gamma_1 \log t$),
+and an additive effect on the log cumulative hazard scale ($\beta^\top x_i$), which depends on the covariates' values.
+
+# A flexible parametric relative risk model
+
+We can generalise the log cumulative hazard of a Weibull by writing
+
+\begin{align}
+\log A_i(t;\theta, x_i) &=  \log A_0(t;\gamma) + \beta^\top x_i \\
+&= \log \gamma_0 + \gamma_1 v_1(\log t) + \gamma_2 v_2(\log t) + 
+\gamma_3 v_3(\log t) + \ldots + \gamma_k v_k(\log t) + \beta^\top x_i \\ 
+&= s(\log t; \gamma) + \beta^\top x_i 
+\end{align}
+
+where $v_i(\cdot)$ are the basis functions of natural cubic splines and $v_1(x)=x$.
+
+This corresponds to the _flexible parametric proportional-hazards model_ by Royston and Parmar (2002), which 
+has  the Weibull as a special case if $\gamma_j = 0$, $j≥2$.
+
+It follows that
+
+\[
+\alpha_i(t;\theta, x_i) = \frac{ds(\log t; \gamma)}{dt} \exp(s(\log t; \gamma))\exp(\beta^\top x_i) \\
+A_i(t;\theta, x_i) = \exp(s(\log t; \gamma))\exp(\beta^\top x_i)
+\]
+
+Note that $\frac{ds(\log t; \gamma)}{dt} = t^{-1} \frac{ds(\log t; \gamma)}{d \log t}$ is
+analytically tractable.
+
+See, among others, Liu, Pawitan, Clements (2017, 2018) for possible extensions to the Royston--Parmar model.
+
+
+# A different flexible parametric relative risk model
+
+In a similar fashion, we can specify the spline function on the log hazard scale.
+
+\begin{align}
+\log \alpha_i(t;\theta, x_i)  &= \log \alpha_0(t;\gamma) + \beta^\top x_i \\
+&=  s(\log t; \gamma) + \beta^\top x_i
+\end{align}
+
+from which it follows that
+
+\[
+\alpha_i(t;\theta, x_i) = \exp(s(\log t; \gamma))\exp(\beta^\top x_i) \\
+A_i(t;\theta, x_i) = \exp(\beta^\top x_i) \int_0^t \exp(s(\log u; \gamma)) du
+\]
+
+Note that $\int_0^t \exp(s(u; \gamma)) du$ is not fully analytically tractable (trivial cases aside).
+
+This is a _different_ flexible parametric relative risk model than the one by Royston and Parmar.
+
+See Bower, Crowther, Lambert (2016) for further details.
+
+
+
+# A note on the MLE for relative risk models
+
+The model parameters $\theta = (\gamma, \beta)$ are again estimated using Maximum Likelihood Estimation.
+
+The Maximum Likelihood Estimator is defined as the solution $\hat{\theta} = (\hat{\gamma}, \hat{\beta})$ to
+the system of equations
+\[
+U(\gamma, \beta) = \begin{pmatrix}
+\frac{\partial}{\partial \gamma} l(\gamma, \beta) \\
+\frac{\partial}{\partial \beta} l(\gamma, \beta)
+\end{pmatrix} =  0
+\]
+
+For the relative risk model with $r(\cdot) = \exp(\cdot)$
+
+- the expressions for the score vector
+
+- their predictable covariation processes
+
+- a short discussion about the Conditions for the large sample properties of the MLE to hold
+
+can be found in ABGK VII.6.1.
+
+The expressions for the score equations and the predictable covariation processes involve the terms $S^{(0)}(\beta,t)$, $S^{(1)}(\beta,t)$,
+and $S^{(2)}(\beta,t)$ (see Lecture on Semiparametric Regression Models).
+
+
+
+# Accelerated failure time regression models I
+
+In the spirit of classical linear models, the following model assumes that the log survival time is linear in the covariates
+
+\[
+\log T_i = \gamma_0 + \beta^\top x_i + \gamma_1 \varepsilon_i
+\tag{5}
+\]
+
+where the error terms $\varepsilon_1, \ldots, \varepsilon_n$ are iid with location parameter zero 
+and scale parameter one. These models are known as _accelerated failure time_ models.
+
+<!-- The model above can be rewritten as -->
+
+<!-- \[ -->
+<!-- \left(\log T_i - (\gamma_0 + \beta^\top x_i)\right)\frac{1}{\gamma_1} = \varepsilon_i -->
+<!-- \] -->
+
+Popular distributions for the error term include
+
+- standard normal
+
+- standard logistic
+
+- standard extreme value
+
+Accelerated failure time models are covered, if only briefly, in ABG (11.5.5) and in ABGK (Example VII.6.3).
+
+
+# Accelerated failure time regression models II
+
+From (5) it follows that
+
+\begin{align}
+S_i(t; \theta, x_i) &= P(T_i > t) \\ 
+&= P(\exp(\gamma_0 + \beta^\top x_i + \gamma_1 \varepsilon_i) > t) \\
+&= P(\exp(\gamma_0 + \gamma_1 \varepsilon_i) > t \exp(-\beta^\top x_i)) \\
+&= S_0(t \exp(-\beta^\top x_i); \gamma)
+\end{align}
+
+where $S_0(t; \gamma) = S_i(t; \theta, x_i)$ when $x_i =0$.
+
+The probability that subject $i$ with covariates $x_i$ will survive longer than $t$ is
+the same as the probability that a "reference" subject will survive longer than $t \exp(-\beta^\top x_i)$.
+
+This may be interpreted as time passing more/less rapidly by a factor $\exp(-\beta^\top x_i)$. 
+$\exp(\beta_j)$ is the _acceleration factor_ associated with a 1-unit increase in $x_{ij}$ (generally).
+
+Given that $\alpha(t) = -\frac{d}{dt}\log S(t)$ we can write
+
+\[
+\alpha_i(t; \theta) = \alpha_0(t \exp(-\beta^\top x_i); \gamma) \exp(-\beta^\top x_i) \\
+A_i(t; \theta) = A_0(t \exp(-\beta^\top x_i); \gamma)
+\]
+
+where the shape of $\alpha_0$ (and therefore $A_0$) depends on the distribution of the error terms. 
+
+The (cumulative) hazard can now be plugged into the likelihood and its parameters
+estimated via Maximum Likelihood Estimation.
+
+Accelerated failure time models can also be _defined_ by the form of the hazard function above.
+
+
+<!-- # A flexible parametric accelerated failure time model -->
+
+<!-- We've seen that according to the accelerated failure time model -->
+
+<!-- \[ -->
+<!-- A_i(t; \theta, x_i) = A_0(t \exp(-\beta^\top x_i); \gamma) -->
+<!-- \] -->
+
+<!-- Starting from the cumulative hazard function of a Weibull distribution we write -->
+
+<!-- \[ -->
+<!-- \log A_i(t; \theta, x_i) = \log \gamma_0 + \gamma_1 \log(t \exp(-\beta^\top x_i)) -->
+<!-- \] -->
+
+<!-- where the covariates are incorporated as a multiplicative effect on time. -->
+
+<!-- We can now expand $\log(t \exp(-\beta^\top x_i))$ into natural cubic spline basis, where again $v_1(x)=x$. -->
+
+<!-- To simplify the notation, let $u = \log\left( t \exp(-\beta^\top x_i)\right)$.  -->
+<!-- The cumulative hazard and the hazard functions are -->
+
+<!-- \[ -->
+<!-- A_i(t; \theta, x_i) = \exp \left\{s(u;\gamma)\right\} \\ -->
+<!-- \alpha_i(t; \theta, x_i) = \exp\left\{s(u;\gamma)\right\} t^{-1} \frac{ds(u;\gamma)}{dt}  -->
+<!-- \] -->
+
+<!-- See Crowther, Royston, Clements (2020) for further details. -->
+
+
+<!-- # References -->
+
+<!-- - Bower, H., Crowther, M.J., & Lambert, P.C. (2016). strcs: A command for fitting flexible parametric survival models on the log-hazard scale. The Stata Journal, 16(4), 989-1012. -->
+
+<!-- - Crowther, M.J., Royston, P., & Clements, M. (2020). A flexible parametric accelerated failure time model. arXiv preprint arXiv:2006.06807. -->
+
+<!-- - Liu, X.R., Pawitan, Y., & Clements, M.S. (2017). Generalized survival models for correlated time‐to‐event data. Statistics in medicine, 36(29), 4743-4762. -->
+
+<!-- - Liu, X.R., Pawitan, Y., & Clements, M. (2018). Parametric and penalized generalized survival models. Statistical methods in medical research, 27(5), 1531-1546. -->
+
+<!--  - Royston, P., & Parmar, M. K. (2002). Flexible parametric proportional‐hazards and proportional‐odds models for censored survival data, with application to prognostic modelling and estimation of treatment effects. Statistics in medicine, 21(15), 2175-2197. -->

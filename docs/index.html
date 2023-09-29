@@ -13,8 +13,8 @@
 
 <title>Theory of survival analysis using counting processes</title>
 
-<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <style type = "text/css">
 .main-container {
   max-width: 940px;
@@ -80,6 +81,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -232,7 +236,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -259,59 +263,87 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Theory of survival analysis using counting processes</h1>
+<h1 class="title toc-ignore">Theory of survival analysis using counting
+processes</h1>
 
 </div>
 
 
 <div id="purpose-of-the-course" class="section level2">
 <h2>Purpose of the course</h2>
-<p>The analysis of survival data is critical in medical research, whether one is studying the lifetimes of cells, tumors, or humans. This course aims to develop an intuitive understanding of the theory of survival analysis methods using counting processes and martingales. This will provide participants with a deeper understanding of survival data analysis methods in medical research, enabling them to better interpret and analyze them.</p>
+<p>The analysis of survival data is critical in medical research,
+whether one is studying the lifetimes of cells, tumors, or humans. This
+course aims to develop an intuitive understanding of the theory of
+survival analysis methods using counting processes and martingales. This
+will provide participants with a deeper understanding of survival data
+analysis methods in medical research, enabling them to better interpret
+and analyze them.</p>
 </div>
 <div id="intended-learning-outcomes" class="section level2">
 <h2>Intended learning outcomes</h2>
-<p>After successfully completing this course, students will be able to:</p>
+<p>After successfully completing this course, students will be able
+to:</p>
 <ul>
-<li>Summarize basic asymptotic theory for processes and sketch derivations of basic results involving the empirical cumulative distribution function.</li>
-<li>Identify notation and terminology for counting processes and connect them to survival statistics.</li>
-<li>Reframe nonparametric estimators of survival quantities in terms of counting processes.</li>
-<li>Paraphrase the martingale central limit theorem and describe how it can be used to perform inference for the Kaplan-Meier estimator.</li>
-<li>Interpret the proportional hazards, additive hazards, and parametric regression models from the counting process perspective.</li>
-<li>Compare and contrast theoretical and methodological advances in survival analysis, including frailty models, multi-state models, joint models, causal inference and prediction for survival analysis.</li>
+<li>Summarize basic asymptotic theory for processes and sketch
+derivations of basic results involving the empirical cumulative
+distribution function.</li>
+<li>Identify notation and terminology for counting processes and connect
+them to survival statistics.</li>
+<li>Reframe nonparametric estimators of survival quantities in terms of
+counting processes.</li>
+<li>Paraphrase the martingale central limit theorem and describe how it
+can be used to perform inference for the Kaplan-Meier estimator.</li>
+<li>Interpret the proportional hazards, additive hazards, and parametric
+regression models from the counting process perspective.</li>
+<li>Compare and contrast theoretical and methodological advances in
+survival analysis, including frailty models, multi-state models, joint
+models, causal inference and prediction for survival analysis.</li>
 </ul>
 </div>
 <div id="contents-of-the-course" class="section level2">
 <h2>Contents of the course</h2>
-<p>The course will cover the following topics in order:</p>
+<p>The course will cover the following topics:</p>
 <ol style="list-style-type: decimal">
-<li>Overview and some basics about the empirical process and modern empirical process theory;</li>
-<li>Motivation of counting processes including notation and terminology. Representation of Nelson-Aalen, Kaplan-Meier, and Aalen-Johansen Estimators in terms of counting processes. Types of censoring and assumptions about censoring.</li>
-<li>Basic terminology and notation about martingales. Limit theorems involving martingales and how to apply them.</li>
-<li>Statistical inference, asymptotic normality and efficiency of Nelson-Aalen and Kaplan-Meier estimators. Logrank tests and its variants, asymptotic theory, confidence bands.</li>
-<li>Proportional hazards and additive hazards models from the counting process perspective.</li>
-<li>Parametric survival models, including accelerated failure time and flexible parametric models.</li>
-<li>Frailty models, noncollapsibility, and causal inference.</li>
+<li>Overview of the course. Counting process introduction, notation and
+terminology.</li>
+<li>Martingale introduction, terminology, and limit theorems. Censoring,
+types, assumptions.</li>
+<li>Representation of Nelson-Aalen and Kaplan-Meier Estimators.
+Asymptotic analysis. Logrank tests and variants, Confidence bands.</li>
+<li>General regression models, likelihood and asymptotic analysis. Time
+dependent covariates and censoring assumptions.</li>
+<li>Proportional hazards models, stratified models, residuals. Additive
+hazards models, relative survival.</li>
+<li>Non martingale analysis using empirical process theory. Functional
+delta method and examples.</li>
+<li>Parametric models, including AFT and flexible parametric, frailty
+(Andrea Discacciati).</li>
+<li>Multi state models introduction and regression. Competing risks and
+illness death models (Therese Andersson).</li>
+<li>Causal inference, pseudo-observations, multiple time scales,
+recurrent events.</li>
 </ol>
 </div>
 <div id="literature" class="section level2">
 <h2>Literature</h2>
 <p>The required course textbook is</p>
-<p>Odd O. Aalen, Ørnulf Borgan and Håkon K. Gjessing. Survival and Event History Analysis: A process point of view. Springer-Verlag, 2008. [ABG]</p>
+<p>Odd O. Aalen, Ørnulf Borgan and Håkon K. Gjessing. Survival and Event
+History Analysis: A process point of view. Springer-Verlag, 2008.
+[ABG]</p>
 <p>other required papers will be provided by the teacher.</p>
 <p>Recommended textbooks for further reading are</p>
-<p>Thomas R. Fleming, David P. Harrington. Counting Processes and Survival Analysis. Wiley-New York, 1991.</p>
-<p>Per K. Andersen, Ørnulf Borgan, Richard D. Gill, Niels Keiding. Statistical Models Based on Counting Processes. Springer-Verlag, 1993.</p>
-</div>
-<div id="location" class="section level2">
-<h2>Location</h2>
-<div id="zoom-check-your-email" class="section level4">
-<h4>Zoom – check your email</h4>
-</div>
+<p>Thomas R. Fleming, David P. Harrington. Counting Processes and
+Survival Analysis. Wiley-New York, 1991.</p>
+<p>Per K. Andersen, Ørnulf Borgan, Richard D. Gill, Niels Keiding.
+Statistical Models Based on Counting Processes. Springer-Verlag,
+1993.</p>
 </div>
 <div id="contact-information" class="section level2">
 <h2>Contact Information:</h2>
 <ul>
-<li>Michael Sachs (e-mail: <a href="mailto:michael.sachs@ki.se" class="email">michael.sachs@ki.se</a>), Department of Medical Epidemiology and Biostatistics (MEB), Karolinska Institutet</li>
+<li>Michael Sachs (e-mail: <a href="mailto:michael.sachs@sund.ku.dk"
+class="email">michael.sachs@sund.ku.dk</a>), Section of Biostatistics,
+University of Copenhagen.</li>
 </ul>
 </div>
 

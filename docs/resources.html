@@ -11,10 +11,10 @@
 
 
 
-<title>Lecture notes and other resources</title>
+<title>Lecture notes and exercises</title>
 
-<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <style type = "text/css">
 .main-container {
   max-width: 940px;
@@ -80,6 +81,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -232,7 +236,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -259,105 +263,107 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Lecture notes and other resources</h1>
+<h1 class="title toc-ignore">Lecture notes and exercises</h1>
 
 </div>
 
 
-<div id="lecture-1-introduction-and-overview" class="section level2">
-<h2>Lecture 1 – Introduction and overview</h2>
+<div id="module-1-introduction-and-overview" class="section level2">
+<h2>Module 1 – Introduction and overview</h2>
 <ul>
-<li><a href="notes/01-introduction.html">Slides (html)</a></li>
+<li><a href="notes/week-01/lecture-a-introduction.html">Introduction to
+the course – Slides (html)</a></li>
+<li><a href="notes/week-01/lecture-b-counting-intro.html">Counting
+processes – Slides (html)</a></li>
 </ul>
 <div id="assignment" class="section level3">
 <h3>Assignment</h3>
-<p>Read <a href="breslow-crowley-1974.pdf">Breslow and Crowley (1974)</a>, from Section 6 on. Think about how empirical process theory was used here, and why it was needed.</p>
-</div>
-<div id="further-reading" class="section level3">
-<h3>Further reading</h3>
-<p>Van der Vaart, A. W. (2000). Asymptotic statistics (Vol. 3). Cambridge university press.</p>
-<p>Shorack, G. R., &amp; Wellner, J. A. (2009). Empirical processes with applications to statistics. Society for Industrial and Applied Mathematics.</p>
-</div>
-</div>
-<div id="lecture-2-counting-processes-in-survival-analysis" class="section level2">
-<h2>Lecture 2 – Counting processes in survival analysis</h2>
 <ul>
-<li><a href="notes/02-counting-intro.html">Slides (html)</a></li>
+<li><a href="notes/week-01/exercises.pdf">Exercises (pdf)</a></li>
+<li><a href="notes/week-01/exercises-solutions.pdf">Exercise solutions
+(pdf)</a></li>
+</ul>
+</div>
+</div>
+<div id="module-2-martingales-and-survival-models"
+class="section level2">
+<h2>Module 2 – Martingales and survival models</h2>
+<ul>
+<li><a href="notes/week-02/lecture-a-martingale-intro.html">Martingales
+– Slides (html)</a></li>
+<li><a href="notes/week-02/lecture-b-censoring.html">Censoring – Slides
+(html)</a></li>
 </ul>
 <div id="assignment-1" class="section level3">
 <h3>Assignment</h3>
-<p>Read <a href="Efron1967.pdf">Efron (1967)</a> and code up a version of the redistribution of mass algorithm in your favorite language. What is the “self-consistency” property and how is it used in Theorem 8.1?</p>
 <ul>
-<li>Here is one solution: <a href="self-consistency.html">self-consistency.R</a></li>
-</ul>
-</div>
-<div id="further-reading-1" class="section level3">
-<h3>Further reading</h3>
-<ul>
-<li>Chapters 1 and 3 in ABG.</li>
-<li>Chapter 0 in Fleming and Harrington.</li>
+<li><a href="notes/week-02/exercises-week2.pdf">Exercises (pdf)</a></li>
+<li><a href="notes/week-02/exercises-solutions.pdf">Exercise solutions
+(pdf)</a></li>
 </ul>
 </div>
 </div>
-<div id="lecture-3-martingales-definitions-properties-and-applications" class="section level2">
-<h2>Lecture 3 – Martingales – definitions, properties, and applications</h2>
+<div id="module-3-nonparametric-estimators" class="section level2">
+<h2>Module 3 – Nonparametric estimators</h2>
 <ul>
-<li><a href="notes/03-martingale-intro.html">Slides (html)</a></li>
+<li><a href="notes/week-03/lecture-a-nonparametrics.html">Nonparametric
+estimators – Slides (html)</a></li>
+<li><a
+href="notes/week-03/lecture-b-tests-and-intervals.html">Nonparametric
+tests and confidence intervals – Slides (html)</a></li>
 </ul>
-<div id="further-reading-2" class="section level3">
-<h3>Further reading</h3>
-<ul>
-<li>Chapter 2 in ABG.</li>
-<li>Chapter 1 in Fleming and Harrington.</li>
-</ul>
-</div>
 <div id="assignment-2" class="section level3">
 <h3>Assignment</h3>
 <ul>
-<li>Complete the derivations of the Poisson process example in the lecture (slides 14 and 20).</li>
-<li>Read Chapter 3 in ABG.</li>
-<li><a href="poisson-process.pdf">Solution (pdf)</a></li>
+<li><a href="notes/week-03/exercises.pdf">Exercises (pdf)</a></li>
 </ul>
 </div>
 </div>
-<div id="lecture-4-martingale-based-analysis-of-nonparametric-estimators-and-tests" class="section level2">
-<h2>Lecture 4 – Martingale based analysis of nonparametric estimators and tests</h2>
+<div id="module-4-regression" class="section level2">
+<h2>Module 4 – Regression</h2>
 <ul>
-<li><a href="notes/04-nonparametrics.html">Slides (html)</a></li>
-<li><a href="notes/na-variation.pdf">NA variation processes (pdf)</a></li>
+<li><a href="notes/week-04/lecture-a-regression1.html">Proportional
+hazards regression – Slides (html)</a></li>
+<li><a href="notes/week-05/additive-regression.html">Additive hazards
+regression – Slides (html)</a></li>
 </ul>
 <div id="assignment-3" class="section level3">
 <h3>Assignment</h3>
 <ul>
-<li>Read Section 3.3 of ABG, paying close scrutiny to section 3.3.5.</li>
-<li>Start to think about ideas for your presentations (options so far are relative survival, confidence bands, <span class="math inline">\(k\)</span>-sample logrank tests)</li>
+<li><a href="notes/week-04/exercises.pdf">Exercises 1 (pdf)</a></li>
+<li><a href="notes/week-05/exercises-5.pdf">Exercises 2 (pdf)</a></li>
 </ul>
 </div>
 </div>
-<div id="lecture-5-semiparametric-regression-models" class="section level2">
-<h2>Lecture 5 – Semiparametric Regression Models</h2>
+<div id="module-5-an-empirical-process-approach-to-survival-analysis"
+class="section level2">
+<h2>Module 5 – An Empirical process approach to survival analysis</h2>
 <ul>
-<li><a href="notes/05-regression.html">Slides (html)</a></li>
+<li><a href="notes/week-06/empirical-process-approach.html">Empirical
+process – Slides (html)</a></li>
 </ul>
 <div id="assignment-4" class="section level3">
 <h3>Assignment</h3>
 <ul>
-<li>Look at section 4.2.3, on martingale tests for the additive model. Can this test be inverted to obtain a confidence band procedure for the cumulative regression functions?</li>
-<li>Read <a href="Cox-1972.pdf">Cox (1972)</a></li>
-<li><a href="aareg-conf-bands.pdf">Solution (pdf)</a></li>
+<li><a href="notes/week-06/breslow-crowley-1974.pdf">Reading – Breslow
+and Crowley 1974 (pdf)</a></li>
 </ul>
 </div>
 </div>
-<div id="lecture-6-parametric-models-by-andrea-discacciati" class="section level2">
-<h2>Lecture 6 – Parametric Models, by Andrea Discacciati</h2>
+<div id="module-6-parametric-models-and-frailty" class="section level2">
+<h2>Module 6 – Parametric models and frailty</h2>
 <ul>
-<li><a href="notes/06-parametric-models.html">Slides (html)</a></li>
+<li><a href="notes/week-07/lecture-a-parametric-models.html">Parametric
+models – Slides (html)</a></li>
+<li><a href="notes/week-07/lecture-b-frailty.html">Frailty – Slides
+(html)</a></li>
 </ul>
 </div>
-<div id="lecture-7-frailty-by-mark-clements" class="section level2">
-<h2>Lecture 7 – Frailty, by Mark Clements</h2>
+<div id="module-7-special-topics" class="section level2">
+<h2>Module 7 – Special topics</h2>
 <ul>
-<li><a href="notes/07-frailty.html">Slides (html)</a></li>
+<li><a href="notes/week-09/special-topics-a.html">Special topics –
+Slides (html)</a></li>
 </ul>
 </div>
 

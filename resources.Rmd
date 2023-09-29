@@ -1,76 +1,68 @@
 ---
-title: "Lecture notes and other resources"
+title: "Lecture notes and exercises"
 ---
 
-## Lecture 1 -- Introduction and overview
+## Module 1 -- Introduction and overview
 
-- [Slides (html)](notes/01-introduction.html)
-
-### Assignment
-
-Read [Breslow and Crowley (1974)](breslow-crowley-1974.pdf), from Section 6 on. Think about how empirical process theory was used here, and why it was needed. 
-
-### Further reading
-
-Van der Vaart, A. W. (2000). Asymptotic statistics (Vol. 3). Cambridge university press.
-
-Shorack, G. R., & Wellner, J. A. (2009). Empirical processes with applications to statistics. Society for Industrial and Applied Mathematics.
-
-## Lecture 2 -- Counting processes in survival analysis
-
-- [Slides (html)](notes/02-counting-intro.html)
+- [Introduction to the course -- Slides (html)](notes/week-01/lecture-a-introduction.html)
+- [Counting processes -- Slides (html)](notes/week-01/lecture-b-counting-intro.html)
 
 ### Assignment
 
-Read [Efron (1967)](Efron1967.pdf) and code up a version of the redistribution of mass algorithm in your favorite language. What is the "self-consistency" property and how is it used in Theorem 8.1? 
+- [Exercises (pdf)](notes/week-01/exercises.pdf)
+- [Exercise solutions (pdf)](notes/week-01/exercises-solutions.pdf)
 
-- Here is one solution: [self-consistency.R](self-consistency.html)
 
-### Further reading
+## Module 2 -- Martingales and survival models
 
-- Chapters 1 and 3 in ABG.
-- Chapter 0 in Fleming and Harrington.
-
-## Lecture 3 -- Martingales -- definitions, properties, and applications
-
-- [Slides (html)](notes/03-martingale-intro.html)
-
-### Further reading
-
-- Chapter 2 in ABG.
-- Chapter 1 in Fleming and Harrington.
+- [Martingales -- Slides (html)](notes/week-02/lecture-a-martingale-intro.html)
+- [Censoring -- Slides (html)](notes/week-02/lecture-b-censoring.html)
 
 ### Assignment
 
-- Complete the derivations of the Poisson process example in the lecture (slides 14 and 20).
-- Read Chapter 3 in ABG.
-- [Solution (pdf)](poisson-process.pdf)
+- [Exercises (pdf)](notes/week-02/exercises-week2.pdf)
+- [Exercise solutions (pdf)](notes/week-02/exercises-solutions.pdf)
 
-## Lecture 4 -- Martingale based analysis of nonparametric estimators and tests
 
-- [Slides (html)](notes/04-nonparametrics.html)
-- [NA variation processes (pdf)](notes/na-variation.pdf)
+## Module 3 -- Nonparametric estimators
 
-### Assignment
-
-- Read Section 3.3 of ABG, paying close scrutiny to section 3.3.5. 
-- Start to think about ideas for your presentations (options so far are relative survival, confidence bands, $k$-sample logrank tests)
-
-## Lecture 5 -- Semiparametric Regression Models
-
-- [Slides (html)](notes/05-regression.html)
+- [Nonparametric estimators -- Slides (html)](notes/week-03/lecture-a-nonparametrics.html)
+- [Nonparametric tests and confidence intervals -- Slides (html)](notes/week-03/lecture-b-tests-and-intervals.html)
 
 ### Assignment
 
-- Look at section 4.2.3, on martingale tests for the additive model. Can this test be inverted to obtain a confidence band procedure for the cumulative regression functions? 
-- Read [Cox (1972)](Cox-1972.pdf)
-- [Solution (pdf)](aareg-conf-bands.pdf)
+- [Exercises (pdf)](notes/week-03/exercises.pdf)
 
 
-## Lecture 6 -- Parametric Models, by Andrea Discacciati
+## Module 4 -- Regression
 
-- [Slides (html)](notes/06-parametric-models.html)
+- [Proportional hazards regression -- Slides (html)](notes/week-04/lecture-a-regression1.html)
+- [Additive hazards regression -- Slides (html)](notes/week-05/additive-regression.html)
 
-## Lecture 7 -- Frailty, by Mark Clements
+### Assignment
 
-- [Slides (html)](notes/07-frailty.html)
+- [Exercises 1 (pdf)](notes/week-04/exercises.pdf)
+- [Exercises 2 (pdf)](notes/week-05/exercises-5.pdf)
+
+
+## Module 5 -- An Empirical process approach to survival analysis
+
+- [Empirical process -- Slides (html)](notes/week-06/empirical-process-approach.html)
+
+### Assignment
+
+- [Reading -- Breslow and Crowley 1974 (pdf)](notes/week-06/breslow-crowley-1974.pdf)
+
+## Module 6 -- Parametric models and frailty
+
+- [Parametric models -- Slides (html)](notes/week-07/lecture-a-parametric-models.html)
+- [Frailty -- Slides (html)](notes/week-07/lecture-b-frailty.html)
+
+## Module 7 -- Special topics
+
+- [Special topics -- Slides (html)](notes/week-09/special-topics-a.html)
+
+
+
+
+
